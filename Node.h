@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+
 class Node
 {
 public:
@@ -14,16 +15,22 @@ public:
 	int m_FCost = 0; // G cost + H cost
 
 	Node* m_Parent = nullptr;
-	std::vector<Node> m_Neighbours;
+	//std::vector<Node> m_Neighbours;
 
 	// Algorithm will choose the node with the lowest F cost. If the algorithm checked FCost, mark it as closed.
 	// if same FCost - check the nodes with lowest H cost (which one is closest to the end node)
 	// if F cost keeps increasing, it means you are not going through a straight path, it will start exploring other paths
 
 	Node(int posX, int posY, bool isObstacle = false, bool visited = false)
-		: m_PosX(posX), m_PosY(posY),m_Obstacle(isObstacle), m_Visited(visited)
+		: m_PosX(posX), m_PosY(posY), m_Obstacle(isObstacle), m_Visited(visited)
 	{}
 
 	void CalculateFCost(int& fCost);
+	void CalculateGCost(Node startNode, int& gCost);
+	void CalculateHCost(Node endNode, int& hCost);
+	int GetDistance(Node nodeA, Node nodeB);
+
+	std::vector<Node> GetNeighbours();
+	Node() = default;
 };
 
