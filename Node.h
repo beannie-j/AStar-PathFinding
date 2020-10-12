@@ -31,6 +31,10 @@ public:
 	int GetDistance(Node nodeA, Node nodeB);
 
 	std::vector<Node> GetNeighbours();
+	void Print() const;
+
+	friend bool operator== (const Node& lhs, const Node& rhs);
+	friend bool operator!= (const Node& lhs, const Node& rhs);
 	Node() = default;
 };
 

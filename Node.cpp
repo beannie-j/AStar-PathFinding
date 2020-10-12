@@ -1,5 +1,6 @@
 #include "Node.h"
 #include "Map.h"
+#include <iostream>
 
 void Node::CalculateFCost(int& fCost)
 {
@@ -53,4 +54,21 @@ std::vector<Node> Node::GetNeighbours()
 		}
 	}
 	return neighbours;
+}
+
+void Node::Print() const
+{
+	std::cout << "[" << m_PosX << " , " << m_PosY << "] FCost: " << m_FCost << " HCost: " << m_HCost << " GCost: " << m_GCost << '\n';
+}
+
+bool operator==(const Node& lhs, const Node& rhs)
+{
+	if (lhs.m_PosX == rhs.m_PosX && lhs.m_PosY == rhs.m_PosY) return true;
+
+	return false;
+}
+
+bool operator!=(const Node& lhs, const Node& rhs)
+{
+	return !(lhs == rhs);
 }

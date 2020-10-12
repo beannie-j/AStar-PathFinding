@@ -7,13 +7,10 @@
 int main()
 {
 	PathFinding p;
-	Node node(0, 0);
-	Node start(1, 1);
-	Node end(5, 5);
-	p.CalculateGCost(node, start); // prints 20
-
-	std::cout << node.m_GCost << std::endl;
+	Node start(2, 0);
+	Node end(0, 5);
 
 	p.FindPath(start, end);
+
 	
 }

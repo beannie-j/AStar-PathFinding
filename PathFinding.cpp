@@ -1,45 +1,62 @@
 #include "PathFinding.h"
 
 #include <vector>
-#include <unordered_set>
 #include <cmath>
 #include <algorithm>
 #include <iostream>
 
-bool cmp(Node nodeA, Node nodeB) { return (nodeA.m_FCost < nodeB.m_FCost); }
+bool cmp(Node nodeA, Node nodeB) { return (nodeA.m_FCost < nodeB.m_FCost || nodeA.m_FCost == nodeB.m_FCost && nodeA.m_HCost < nodeB.m_HCost); }
 
 void PathFinding::FindPath(Node startNode, Node endNode)
 {
+	// while toExplore list is not empty keep looping.
 	Node currentNode = startNode;
-	std::vector<Node> neighbours = currentNode.GetNeighbours();
+	std::vector<Node> neighbours;
 	std::vector<Node> toExplore;
-	//std::unordered_set<Node> visited;
+	std::vector<Node> visited;
 
-	for (Node node : neighbours)
+	//toExplore.push_back(startNode);
+
+	while (currentNode != endNode)
 	{
-		// Calculate all travel costs.
-		CalculateGCost(node, startNode);
-		CalculateHCost(node, endNode);
-		CalculateFCost(node);
+		std::cout << "*Current node* ";
+		currentNode.Print();
+		neighbours = currentNode.GetNeighbours();
+		toExplore.erase(toExplore.begin(), toExplore.end());
 
-		// add the lowest FCost nodes to explore list - ordered
-		toExplore.emplace_back(node);
-	}
+		for (Node node : neighbours)
+		{
+			// Calculate all travel costs.
+			CalculateGCost(node, startNode);
+			CalculateHCost(node, endNode);
+			CalculateFCost(node);
 
-	// sort the toExplore vector by FCost
-	std::sort(toExplore.begin(), toExplore.end(), cmp);
+			// add the lowest FCost nodes to explore list
+			toExplore.emplace_back(node);
+		}
+		
+		// sort the list so that we can get the smallest fCost and hCost neighbour
+		std::sort(toExplore.begin(), toExplore.end(), cmp);
 
-	std::cout << "toExplore vector contains:\n";
-	int i = 0;
-	for (auto it = toExplore.begin(); it != toExplore.end(); ++it)
-	{
-		std::cout << i << " : [" << it->m_PosX << " , " << it->m_PosY << "] GCost: " << it->m_GCost << " HCost: " << it->m_HCost << " FCost: " << it->m_FCost << '\n';
+		std::cout << "toExplore vector contains:\n";
+		for (const auto& node : toExplore)
+		{
+			node.Print();
+		}
+		
+		currentNode = toExplore.at(0);
+		// currentNode moves to first element in toExplore list
+		// mark that node as visited
+		visited.push_back(currentNode);
 		i++;
+
+		if (currentNode == endNode)
+		{
+			std::cout << "reached destination\n";
+			currentNode.Print();
+			return;
+		}
 	}
-
-	//toExplore.remove(0);
-
-	// calculate neighbours in the newNode again.
 }
 
 //diagonal move is cost 14, vertical/ horizontal move is cost 10
