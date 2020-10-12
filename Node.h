@@ -14,6 +14,8 @@ public:
 	int m_HCost = 0; // opposite of G cost, how far is this node from the end node
 	int m_FCost = 0; // G cost + H cost
 
+	char mark;
+
 	Node* m_Parent = nullptr;
 	//std::vector<Node> m_Neighbours;
 

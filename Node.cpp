@@ -47,8 +47,8 @@ std::vector<Node> Node::GetNeighbours()
 			int checkY = m_PosY + y;
 			
 			// make sure to checkX and checkY doesnt go out of grid bounds
-			if (checkX >= 0 && checkX < Map::m_GridWidth 
-				&& checkY >= 0 && checkY < Map::m_GridHeight) {
+			if (checkX >= 0 && checkX < Map::GridWidth 
+				&& checkY >= 0 && checkY < Map::GridHeight) {
 				neighbours.emplace_back(Node(checkX, checkY));
 			}
 		}
@@ -58,7 +58,7 @@ std::vector<Node> Node::GetNeighbours()
 
 void Node::Print() const
 {
-	std::cout << "[" << m_PosX << " , " << m_PosY << "] FCost: " << m_FCost << " HCost: " << m_HCost << " GCost: " << m_GCost << '\n';
+	std::cout << " [" << m_PosX << " , " << m_PosY << "] FCost: " << m_FCost << " HCost: " << m_HCost << " GCost: " << m_GCost << '\n';
 }
 
 bool operator==(const Node& lhs, const Node& rhs)

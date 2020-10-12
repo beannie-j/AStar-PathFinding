@@ -1,4 +1,5 @@
 #include "PathFinding.h"
+#include "Map.h"
 
 #include <vector>
 #include <cmath>
@@ -15,7 +16,11 @@ void PathFinding::FindPath(Node startNode, Node endNode)
 	std::vector<Node> toExplore;
 	std::vector<Node> visited;
 
-	//toExplore.push_back(startNode);
+	Map map;
+	map.Init();
+	map.Add(startNode);
+	map.Add(endNode);
+	map.Draw();
 
 	while (currentNode != endNode)
 	{
@@ -43,20 +48,26 @@ void PathFinding::FindPath(Node startNode, Node endNode)
 		{
 			node.Print();
 		}
-		
+
+		// currentNode set to first element in toExplore list - most path efficient node.
 		currentNode = toExplore.at(0);
-		// currentNode moves to first element in toExplore list
+
 		// mark that node as visited
+		currentNode.mark = '*';
 		visited.push_back(currentNode);
-		i++;
+		map.Add(currentNode);
 
 		if (currentNode == endNode)
 		{
-			std::cout << "reached destination\n";
+			std::cout << "reached destination\n *Current Node* ";
 			currentNode.Print();
+			map.Add(endNode);
+			map.Draw();
+
 			return;
 		}
 	}
+
 }
 
 //diagonal move is cost 14, vertical/ horizontal move is cost 10

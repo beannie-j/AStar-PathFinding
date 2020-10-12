@@ -1,17 +1,25 @@
 #pragma once
 #include "Node.h"
+
+#include <array>
+
 class Map
 {
 public:
-	static constexpr int m_GridWidth = 30;
-	static constexpr int m_GridHeight = 20;
+	static constexpr int GridWidth = 20;
+	static constexpr int GridHeight = 10;
 
-	Node grid[m_GridWidth][m_GridHeight];
-	Node* startNode = nullptr;
-	Node* endNode = nullptr;
+	std::array<std::array<Node, GridHeight>, GridWidth> grid;
 
 	void Init();
+	void Draw();
+	void Add(Node node);
 
-	Map() = default;
+	static Map& Get();
+
+	auto& GetGrid();
+
+	Map();
+	~Map();
 };
 
