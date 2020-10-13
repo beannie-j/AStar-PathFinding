@@ -10,7 +10,7 @@ void Map::Init()
 	{
 		for (int y = 0; y < GridHeight; y++)
 		{
-			grid[x][y] = Node(x, y);
+			grid[x][y] = Node(x, y, false);
 		}
 	}
 }

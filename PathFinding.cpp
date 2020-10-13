@@ -16,10 +16,21 @@ void PathFinding::FindPath(Node startNode, Node endNode)
 	std::vector<Node> toExplore;
 	std::vector<Node> visited;
 
+	Node obstacle1(3, 2, true);
+	obstacle1.mark = 'X';
+
+	Node obstacle2(4, 3, true);
+	obstacle2.mark = 'X';
+
+	//auto& map = Map::Get();
+	//map.Init();
+
 	Map map;
 	map.Init();
 	map.Add(startNode);
 	map.Add(endNode);
+	map.Add(obstacle1);
+	map.Add(obstacle2);
 	map.Draw();
 
 	while (currentNode != endNode)
@@ -50,6 +61,13 @@ void PathFinding::FindPath(Node startNode, Node endNode)
 		}
 
 		// currentNode set to first element in toExplore list - most path efficient node.
+
+		/*
+			Missing part where if other path has better FCost values it needs to retrace and come back.
+			F costs are increasing if you are not going in a straight line. Even though the H costs are decreasing F costs will be increasing a lot more.
+			if F cost keeps increasing you need to look at other options. 
+
+			*/
 		currentNode = toExplore.at(0);
 
 		// mark that node as visited
