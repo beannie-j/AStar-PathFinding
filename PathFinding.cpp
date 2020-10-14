@@ -40,22 +40,30 @@ void PathFinding::FindPath(Node startNode, Node endNode)
 		neighbours = currentNode.GetNeighbours();
 		toExplore.erase(toExplore.begin(), toExplore.end());
 
-		for (Node node : neighbours)
+		for (Node& node : neighbours)
 		{
 			// Calculate all travel costs.
 			CalculateGCost(node, startNode);
-			CalculateHCost(node, endNode);
+			node.m_HCost = CalculateHCost(endNode);
 			CalculateFCost(node);
+
+			node.CalculateCosts(startNode, endNode);
+			// g, h, f
 
 			// add the lowest FCost nodes to explore list
 			toExplore.emplace_back(node);
 		}
 		
 		// sort the list so that we can get the smallest fCost and hCost neighbour
-		std::sort(toExplore.begin(), toExplore.end(), cmp);
+		std::sort(toExplore.begin(), toExplore.end(), [](auto& nodeA, auto& nodeB)
+		{
+			return (nodeA.m_FCost < nodeB.m_FCost ||
+				nodeA.m_FCost == nodeB.m_FCost &&
+				nodeA.m_HCost < nodeB.m_HCost);
+		});
 
 		std::cout << "toExplore vector contains:\n";
-		for (const auto& node : toExplore)
+		for (const Node& node : toExplore)
 		{
 			node.Print();
 		}

@@ -21,6 +21,4 @@ int main()
 	//map.Add(end);
 
 	//map.Draw();
-
-	
 }

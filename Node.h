@@ -29,7 +29,7 @@ public:
 
 	void CalculateFCost(int& fCost);
 	void CalculateGCost(Node startNode, int& gCost);
-	void CalculateHCost(Node endNode, int& hCost);
+	int CalculateHCost(Node endNode);
 	int GetDistance(Node nodeA, Node nodeB);
 
 	std::vector<Node> GetNeighbours();

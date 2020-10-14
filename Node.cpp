@@ -13,9 +13,9 @@ void Node::CalculateGCost(Node startNode, int& gCost)
 	gCost = GetDistance(*this, startNode);
 }
 // H cost (Heuristic cost) - opposite of G cost, how far is this node from the destination node
-void Node::CalculateHCost(Node endNode, int& hCost)
+int Node::CalculateHCost(Node endNode)
 {
-	hCost = GetDistance(*this, endNode);
+	return GetDistance(*this, endNode);
 }
 
 int Node::GetDistance(Node nodeA, Node nodeB)
@@ -36,7 +36,7 @@ std::vector<Node> Node::GetNeighbours()
 	std::vector<Node> neighbours;
 
 	auto& map = Map::Get();
-	// auto& grid = map.GetGrid(); why this is not working?
+	Map::NodeGrid& grid = map.GetGrid(); // why this is not working?
 
 	// looping through -1 to 1 x and y, skip 0 cos that's the node itself.
 	for (int x = -1; x <= 1; x++)
@@ -50,6 +50,8 @@ std::vector<Node> Node::GetNeighbours()
 				std::cout << "Skipping Obstacle\n";
 				continue;
 			}
+
+
 
 			int checkX = m_PosX + x;
 			int checkY = m_PosY + y;

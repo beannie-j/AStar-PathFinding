@@ -9,7 +9,9 @@ public:
 	static constexpr int GridWidth = 20;
 	static constexpr int GridHeight = 10;
 
-	std::array<std::array<Node, GridHeight>, GridWidth> grid;
+	using NodeGrid = std::array<std::array<Node, GridHeight>, GridWidth>;
+
+	NodeGrid grid;
 
 	void Init();
 	void Draw();
@@ -17,7 +19,7 @@ public:
 
 	static Map& Get();
 
-	auto& GetGrid();
+	NodeGrid& GetGrid();
 
 	Map();
 	~Map();

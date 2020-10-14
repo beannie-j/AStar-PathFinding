@@ -43,7 +43,7 @@ Map& Map::Get()
 	return *s_Instance;
 }
 
-auto& Map::GetGrid()
+Map::NodeGrid& Map::GetGrid()
 {
 	return grid;
 }
