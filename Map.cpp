@@ -10,7 +10,7 @@ void Map::Init()
 	{
 		for (int y = 0; y < GridHeight; y++)
 		{
-			grid[x][y] = Node(x, y, false);
+			Add(Node(x, y, false));
 		}
 	}
 }
@@ -21,9 +21,9 @@ void Map::Draw()
 	{
 		for (int x = 0; x < GridWidth; x++)
 		{
-			if (grid[x][y].mark > 0)
+			if (grid[x + y * GridWidth].mark > 0)
 			{
-				std::cout << grid[x][y].mark << " ";
+				std::cout << grid[x + y * GridWidth].mark << " ";
 			}
 			else std::cout << ". ";
 		}
@@ -31,11 +31,11 @@ void Map::Draw()
 	}
 }
 
-void Map::Add(Node node)
+void Map::Add(Node& node)
 {
 	int x = node.m_PosX;
 	int y = node.m_PosY;
-	grid[x][y] = node;
+	grid[x + y * GridWidth] = node;
 }
 
 Map& Map::Get()
@@ -46,6 +46,11 @@ Map& Map::Get()
 Map::NodeGrid& Map::GetGrid()
 {
 	return grid;
+}
+
+Node& Map::GetNode(int x, int y)
+{
+	return grid[x + y * GridWidth];
 }
 
 Map::Map()

@@ -47,11 +47,8 @@ std::vector<Node> Node::GetNeighbours()
 
 			if (m_IsObstacle)
 			{
-				std::cout << "Skipping Obstacle\n";
 				continue;
 			}
-
-
 
 			int checkX = m_PosX + x;
 			int checkY = m_PosY + y;
@@ -59,9 +56,7 @@ std::vector<Node> Node::GetNeighbours()
 			// make sure to checkX and checkY doesnt go out of grid bounds
 			if (checkX >= 0 && checkX < Map::GridWidth 
 				&& checkY >= 0 && checkY < Map::GridHeight) {
-				// need to fix this part....
-				neighbours.emplace_back(Node(checkX, checkY, false));
-				//neighbours.emplace_back(map.grid[checkX, checkY]);
+				neighbours.push_back(grid[checkX + checkY * Map::GridWidth]);
 			}
 		}
 	}
@@ -70,7 +65,14 @@ std::vector<Node> Node::GetNeighbours()
 
 void Node::Print() const
 {
-	std::cout << " [" << m_PosX << " , " << m_PosY << "] FCost: " << m_FCost << " HCost: " << m_HCost << " GCost: " << m_GCost << " Obstacle: " << m_IsObstacle <<'\n';
+	std::cout << " [" << m_PosX << " , " << m_PosY << "] FCost: " << m_FCost << " HCost: " << m_HCost << " GCost: " << m_GCost << " Obstacle: " << m_IsObstacle;
+	if (m_Parent != nullptr)
+	{
+		std::cout << " [Parent] " << m_Parent->m_PosX << " , " << m_Parent->m_PosY << '\n';
+	}
+
+	else 
+		std::cout << '\n';
 }
 
 bool operator==(const Node& lhs, const Node& rhs)

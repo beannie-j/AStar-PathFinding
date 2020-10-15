@@ -1,7 +1,6 @@
 #pragma once
 #include "Node.h"
 
-#include <array>
 
 class Map
 {
@@ -9,17 +8,19 @@ public:
 	static constexpr int GridWidth = 20;
 	static constexpr int GridHeight = 10;
 
-	using NodeGrid = std::array<std::array<Node, GridHeight>, GridWidth>;
+	using NodeGrid = Node[GridWidth * GridHeight];
 
 	NodeGrid grid;
 
 	void Init();
 	void Draw();
-	void Add(Node node);
+	void Add(Node& node);
 
 	static Map& Get();
 
 	NodeGrid& GetGrid();
+
+	Node& GetNode(int x, int y);
 
 	Map();
 	~Map();

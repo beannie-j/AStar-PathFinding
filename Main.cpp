@@ -8,10 +8,12 @@ int main()
 {
 	PathFinding p;
 
-	Node start(1, 0, false);
+	Node start(7, 4, false);
 	start.mark = 'S';
-	Node end(5, 5, false);
+	Node end(4, 2, false);
 	end.mark = 'E';
+
+	Map map;
 
 	p.FindPath(start, end);
 
