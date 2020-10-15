@@ -52,23 +52,22 @@ void PathFinding::FindPath(Node& startNode, Node& endNode)
 	{
 		Node currentNode = openSet[0];
 
-		/*std::sort(openSet.begin(), openSet.end(), [](auto& nodeA, auto& nodeB)
+		std::sort(openSet.begin(), openSet.end(), [](auto& nodeA, auto& nodeB)
 			{
 				return (nodeA.m_FCost < nodeB.m_FCost ||
 					nodeA.m_FCost == nodeB.m_FCost &&
 					nodeA.m_HCost < nodeB.m_HCost);
-			});*/
+			});
 		
-		for (int i = 1; i < openSet.size(); i++) {
+		/*for (int i = 1; i < openSet.size(); i++) {
 			if (openSet[i].m_FCost < currentNode.m_FCost || openSet[i].m_FCost == currentNode.m_FCost) {
 				if (openSet[i].m_HCost < currentNode.m_HCost)
 				{
 					currentNode = openSet[i];
 				}
 			}
-		}
+		}*/
 
-		//map.Add(currentNode);
 		currentNode.Print();
 
 		openSet.erase(std::remove(openSet.begin(), openSet.end(), currentNode), openSet.end());
