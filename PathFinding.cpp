@@ -10,7 +10,6 @@ bool cmp(Node nodeA, Node nodeB) { return (nodeA.m_FCost < nodeB.m_FCost || node
 
 void PathFinding::FindPath(Node& startNode, Node& endNode)
 {
-	// while toExplore list is not empty keep looping.
 	std::vector<Node> neighbours;
 	std::vector<Node> openSet;
 	std::vector<Node> closedSet;
@@ -50,17 +49,16 @@ void PathFinding::FindPath(Node& startNode, Node& endNode)
 	openSet.push_back(startNode);
 
 	while (!openSet.empty())
-	{/*
-		std::sort(openSet.begin(), openSet.end(), [](auto& nodeA, auto& nodeB)
-			{
-				return (nodeA.m_FCost < nodeB.m_FCost ||
-						nodeA.m_FCost == nodeB.m_FCost &&
-						nodeA.m_HCost < nodeB.m_HCost);
-			});
-			*/
-
+	{
 		Node currentNode = openSet[0];
 
+		/*std::sort(openSet.begin(), openSet.end(), [](auto& nodeA, auto& nodeB)
+			{
+				return (nodeA.m_FCost < nodeB.m_FCost ||
+					nodeA.m_FCost == nodeB.m_FCost &&
+					nodeA.m_HCost < nodeB.m_HCost);
+			});*/
+		
 		for (int i = 1; i < openSet.size(); i++) {
 			if (openSet[i].m_FCost < currentNode.m_FCost || openSet[i].m_FCost == currentNode.m_FCost) {
 				if (openSet[i].m_HCost < currentNode.m_HCost)
@@ -69,7 +67,10 @@ void PathFinding::FindPath(Node& startNode, Node& endNode)
 				}
 			}
 		}
-		
+
+		//map.Add(currentNode);
+		currentNode.Print();
+
 		openSet.erase(std::remove(openSet.begin(), openSet.end(), currentNode), openSet.end());
 		closedSet.push_back(currentNode);
 
@@ -85,20 +86,23 @@ void PathFinding::FindPath(Node& startNode, Node& endNode)
 
 			if (newCostToNeighbour < neighbour.m_GCost || !Contains(openSet, neighbour))
 			{
+				//std::cout << "new cost " << newCostToNeighbour << " compared to " << neighbour.m_GCost << std::endl;
 				neighbour.m_GCost = newCostToNeighbour;
 				neighbour.m_HCost = CalculateHCost(neighbour, endNode);
+				CalculateFCost(neighbour);
 				neighbour.m_Parent = new Node(currentNode.m_PosX, currentNode.m_PosY, false); 
-
-				map.Add(currentNode);
 
 				if (!Contains(openSet, neighbour))
 					openSet.push_back(neighbour);
 			}
+			map.Add(currentNode);
+			currentNode.Print();
 		}
 
 		if (currentNode == endNode)
 		{
-			map.Add(currentNode);
+			std::cout << "match" << std::endl;
+			currentNode.Print();
 			RetracePath(startNode, endNode);
 			return;
 		}
@@ -149,31 +153,32 @@ bool PathFinding::Contains(std::vector<Node> vec, Node node)
 
 bool PathFinding::RetracePath(Node& startNode, Node& endNode)
 {
-	std::cout << "Path: \n";
+	std::cout << "Map: \n";
 
 	auto& map = Map::Get();
 	auto& grid = map.GetGrid();
+
 
 	for (int y = 0; y < Map::GridHeight; y++)
 	{
 		for (int x = 0; x < Map::GridWidth; x++)
 		{
-			if(grid[x + y * Map::GridWidth].m_Parent != nullptr)
+			if (grid[x + y * Map::GridWidth].m_Parent)
+			{
 				grid[x + y * Map::GridWidth].Print();
+			}
 		}
+		std::cout << "\n";
 	}
+	std::cout << "Path: \n";
 
 	std::vector<Node> path;
 	Node currentNode = map.GetNode(endNode.m_PosX, endNode.m_PosY); // endNode
-
-	std::cout << "*: \n";
-
 
 	while (currentNode != startNode)
 	{
 		path.push_back(currentNode);
 		currentNode = map.GetNode(currentNode.m_Parent->m_PosX, currentNode.m_Parent->m_PosY);
-		//currentNode.Print();
 	}
 
 	for (Node& node : path)
@@ -181,8 +186,10 @@ bool PathFinding::RetracePath(Node& startNode, Node& endNode)
 		node.mark = 'P';
 		map.Add(node);
 		node.Print();
+	
 	}
 
+	map.Add(endNode);
 	map.Draw();
 
 	return false;
