@@ -19,8 +19,10 @@ workspace "AStar-PathFinding"
 
 		files
         {
-            "%{prj.location}/*.h",
-            "%{prj.location}/*.cpp"
+            "%{prj.location}/AStar/src/Logic/*.h",
+            "%{prj.location}/AStar/src/Logic/*.cpp",
+			"%{prj.location}/AStar/src/Graphics/*.cpp",
+			"%{prj.location}/AStar/src/Graphics/*.cpp"
         }
 
 		includedirs

@@ -7,10 +7,12 @@
 int main()
 {
 	PathFinding p;
+	
+	//width 20, height 10
 
 	Node start(7, 4, false);
 	start.mark = 'S';
-	Node end(4, 2, false);
+	Node end(4, 9, false);
 	end.mark = 'E';
 
 	Map map;

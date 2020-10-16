@@ -58,15 +58,6 @@ void PathFinding::FindPath(Node& startNode, Node& endNode)
 					nodeA.m_FCost == nodeB.m_FCost &&
 					nodeA.m_HCost < nodeB.m_HCost);
 			});
-		
-		/*for (int i = 1; i < openSet.size(); i++) {
-			if (openSet[i].m_FCost < currentNode.m_FCost || openSet[i].m_FCost == currentNode.m_FCost) {
-				if (openSet[i].m_HCost < currentNode.m_HCost)
-				{
-					currentNode = openSet[i];
-				}
-			}
-		}*/
 
 		currentNode.Print();
 
