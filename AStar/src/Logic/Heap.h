@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 template <typename T>
 struct HeapItem {
 	int index = 0;
@@ -9,7 +10,7 @@ template <typename T>
 class Heap
 {
 public:
-	HeapItem items[];
+	std::vector<HeapItem> items;
 	int count;
 
 	Heap() = default;
