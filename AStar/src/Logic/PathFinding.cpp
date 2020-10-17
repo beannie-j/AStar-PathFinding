@@ -80,7 +80,7 @@ void PathFinding::FindPath(Node& startNode, Node& endNode)
 				neighbour.m_GCost = newCostToNeighbour;
 				neighbour.m_HCost = CalculateHCost(neighbour, endNode);
 				CalculateFCost(neighbour);
-				neighbour.m_Parent = new Node(currentNode.m_PosX, currentNode.m_PosY, false); 
+				neighbour.m_Parent = new Node(currentNode.m_PosX, currentNode.m_PosY, false);
 
 				if (!Contains(openSet, neighbour))
 					openSet.push_back(neighbour);
@@ -176,7 +176,7 @@ bool PathFinding::RetracePath(Node& startNode, Node& endNode)
 		node.mark = 'P';
 		map.Add(node);
 		node.Print();
-	
+
 	}
 
 	map.Add(endNode);
@@ -184,4 +184,3 @@ bool PathFinding::RetracePath(Node& startNode, Node& endNode)
 
 	return false;
 }
-

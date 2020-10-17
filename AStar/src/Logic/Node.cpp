@@ -77,7 +77,13 @@ void Node::Print() const
 
 bool operator==(const Node& lhs, const Node& rhs)
 {
-	if (lhs.m_PosX == rhs.m_PosX && lhs.m_PosY == rhs.m_PosY) return true;
+	if (lhs.m_PosX == rhs.m_PosX && lhs.m_PosY == rhs.m_PosY)
+	{
+		std::cout << "Equals! "; 
+		rhs.Print();
+		lhs.Print();
+		return true;
+	}
 
 	return false;
 }
