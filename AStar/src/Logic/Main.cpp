@@ -10,7 +10,10 @@ int main()
 	
 	//width 20, height 10
 
-	Node start(9, 2, false);
+	Node start(7, 4, false);
+	//Node start(9, 2, false);
+	//Node start(15, 8, false);
+
 	start.mark = 'S';
 	Node end(4, 2, false);
 	end.mark = 'E';

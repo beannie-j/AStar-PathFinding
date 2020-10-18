@@ -50,33 +50,52 @@ void PathFinding::FindPath(Node& startNode, Node& endNode)
 
 	while (!openSet.empty())
 	{
-		Node currentNode = openSet[0];
 		
+
+		/*
 		for (int i = 1; i < openSet.size(); i++) {
 			if (openSet[i].m_FCost < currentNode.m_FCost || openSet[i].m_FCost == currentNode.m_FCost) {
 				if (openSet[i].m_HCost < currentNode.m_HCost)
+				{
 					currentNode = openSet[i];
+				}
 			}
-		}
+		}*/
 		
-		currentNode.Print();
-		/*
+		
+		
+		
 		std::sort(openSet.begin(), openSet.end(), [](auto& nodeA, auto& nodeB)
 			{
 				return (nodeA.m_FCost < nodeB.m_FCost ||
 					nodeA.m_FCost == nodeB.m_FCost &&
 					nodeA.m_HCost < nodeB.m_HCost);
 			});
-			*/
 
-		//
+		Node currentNode = openSet[0];
+
+		
+		std::cout << "\n";
+		std::cout << "--------OPEN SET START-------------" << std::endl;
+
+		for (const auto& node : openSet)
+		{
+			node.Print();
+		}
+
+		std::cout << "---------OPEN SET FINISH-------------" << std::endl;
+		std::cout << "\n";
+
+		std::cout << "---------CURRENT NODE-------------" << std::endl;
+		currentNode.Print();
+		std::cout << "-------------------------------" << std::endl;
 
 		openSet.erase(std::remove(openSet.begin(), openSet.end(), currentNode), openSet.end());
 		closedSet.push_back(currentNode);
 
-		for (Node& neighbour : currentNode.GetNeighbours())
+		auto neighbours = currentNode.GetNeighbours();
+		for (Node& neighbour : neighbours)
 		{
-			
 			if (neighbour.m_IsObstacle || Contains(closedSet, neighbour)) continue;
 			// Calculate all travel costs.
 			CalculateGCost(neighbour, startNode);
@@ -84,20 +103,42 @@ void PathFinding::FindPath(Node& startNode, Node& endNode)
 			CalculateFCost(neighbour);
 
 			int newCostToNeighbour = currentNode.m_GCost + GetDistance(currentNode, neighbour);
-
 			if (newCostToNeighbour < neighbour.m_GCost || !Contains(openSet, neighbour))
 			{
+				std::cout << "Exploring neighbour --> ";
+
 				neighbour.m_GCost = newCostToNeighbour;
 				neighbour.m_HCost = CalculateHCost(neighbour, endNode);
 				CalculateFCost(neighbour);
+
+				std::cout << "Setting the parent --> ";
 				neighbour.m_Parent = new Node(currentNode.m_PosX, currentNode.m_PosY, false);
 
+				neighbour.Print();
+
+
 				if (!Contains(openSet, neighbour))
+				{
 					openSet.push_back(neighbour);
+				}
 			}
 			map.Add(currentNode);
-			currentNode.Print();
+			//currentNode.Print();
 		}
+
+
+
+		std::cout << "\n";
+		std::cout << "--------EXPLORING NEIGHBOURS FOR NODE";
+		currentNode.Print();
+
+		for (const auto& node : neighbours)
+		{
+			node.Print();
+		}
+
+		std::cout << "---------NEIGHBOURS FINISH-------------" << std::endl;
+		std::cout << "\n";
 
 		if (currentNode == endNode)
 		{
@@ -139,17 +180,19 @@ int PathFinding::CalculateFCost(Node& node)
 	return node.m_FCost;
 }
 
-bool PathFinding::Contains(std::vector<Node> vec, Node node)
+bool PathFinding::Contains(std::vector<Node> vec, Node _node)
 {
-	if (std::find(vec.begin(), vec.end(), node) != vec.end())
+	for (const Node& node : vec)
 	{
-		std::cout << " Contains true ";
-		node.Print();
-		/* v contains x */
-		return true;
+		if (node == _node) // if they have same x and y coordinates.
+		{	// compare parents
+			if (node.m_Parent != nullptr && _node.m_Parent != nullptr)
+			{
+				if (node.m_Parent == _node.m_Parent) return true;
+			}
+		}
 	}
-	else /* v does not contain x */
-		return false;
+	return false;
 }
 
 bool PathFinding::RetracePath(Node& startNode, Node& endNode)
