@@ -51,21 +51,32 @@ void PathFinding::FindPath(Node& startNode, Node& endNode)
 	while (!openSet.empty())
 	{
 		Node currentNode = openSet[0];
-
+		
+		for (int i = 1; i < openSet.size(); i++) {
+			if (openSet[i].m_FCost < currentNode.m_FCost || openSet[i].m_FCost == currentNode.m_FCost) {
+				if (openSet[i].m_HCost < currentNode.m_HCost)
+					currentNode = openSet[i];
+			}
+		}
+		
+		currentNode.Print();
+		/*
 		std::sort(openSet.begin(), openSet.end(), [](auto& nodeA, auto& nodeB)
 			{
 				return (nodeA.m_FCost < nodeB.m_FCost ||
 					nodeA.m_FCost == nodeB.m_FCost &&
 					nodeA.m_HCost < nodeB.m_HCost);
 			});
+			*/
 
-		currentNode.Print();
+		//
 
 		openSet.erase(std::remove(openSet.begin(), openSet.end(), currentNode), openSet.end());
 		closedSet.push_back(currentNode);
 
 		for (Node& neighbour : currentNode.GetNeighbours())
 		{
+			
 			if (neighbour.m_IsObstacle || Contains(closedSet, neighbour)) continue;
 			// Calculate all travel costs.
 			CalculateGCost(neighbour, startNode);
@@ -76,7 +87,6 @@ void PathFinding::FindPath(Node& startNode, Node& endNode)
 
 			if (newCostToNeighbour < neighbour.m_GCost || !Contains(openSet, neighbour))
 			{
-				//std::cout << "new cost " << newCostToNeighbour << " compared to " << neighbour.m_GCost << std::endl;
 				neighbour.m_GCost = newCostToNeighbour;
 				neighbour.m_HCost = CalculateHCost(neighbour, endNode);
 				CalculateFCost(neighbour);
@@ -91,8 +101,7 @@ void PathFinding::FindPath(Node& startNode, Node& endNode)
 
 		if (currentNode == endNode)
 		{
-			std::cout << "match" << std::endl;
-			currentNode.Print();
+			//currentNode.Print();
 			RetracePath(startNode, endNode);
 			return;
 		}
@@ -134,8 +143,10 @@ bool PathFinding::Contains(std::vector<Node> vec, Node node)
 {
 	if (std::find(vec.begin(), vec.end(), node) != vec.end())
 	{
+		std::cout << " Contains true ";
+		node.Print();
 		/* v contains x */
-		return false;
+		return true;
 	}
 	else /* v does not contain x */
 		return false;

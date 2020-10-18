@@ -1,8 +1,10 @@
 #pragma once
 #include <vector>
+#include <algorithm>
 #include "Node.h"
 
-struct HeapItem {
+class HeapItem {
+public:
 	int index = 0;
 	Node node;
 
@@ -25,14 +27,16 @@ public:
 	void ShiftDown(HeapItem& item);
 	void Swap(HeapItem& itemA, HeapItem& itemB);
 	int Compare(HeapItem itemA, HeapItem itemB);
-	bool Contains(Node node);
 	HeapItem RemoveFirst();
+	bool isEmpty() const;
+	bool Contains(Node node);
 };
 
 void Heap::Add(HeapItem item)
 {
 	item.index = count;
-	items[count++] = item;
+	items.push_back(item);
+	count++;
 	ShiftUp(item);
 }
 
@@ -48,7 +52,7 @@ void Heap::ShiftUp(HeapItem& item)
 	}
 }
 
-inline void Heap::ShiftDown(HeapItem& item)
+void Heap::ShiftDown(HeapItem& item)
 {
 	while (true) {
 		int childIndexLeft = item.index * 2 + 1;
@@ -92,11 +96,7 @@ int Heap::Compare(HeapItem itemA, HeapItem itemB)
 	else return -1;
 }
 
-inline bool Heap::Contains(Node node)
-{
-}
-
-inline HeapItem Heap::RemoveFirst()
+HeapItem Heap::RemoveFirst()
 {
 	HeapItem firstItem = items[0];
 	count--;
@@ -105,4 +105,21 @@ inline HeapItem Heap::RemoveFirst()
 	ShiftDown(items[0]);
 
 	return firstItem;
+}
+
+bool Heap::isEmpty() const
+{
+	return count == 0;
+}
+
+bool Heap::Contains(Node node)
+{
+	for (const HeapItem& item : items)
+	{
+		if (item.node == node)
+		{
+			return true;
+		}
+		else return false;
+	}
 }

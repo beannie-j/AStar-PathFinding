@@ -10,9 +10,9 @@ int main()
 	
 	//width 20, height 10
 
-	Node start(7, 4, false);
+	Node start(9, 2, false);
 	start.mark = 'S';
-	Node end(4, 9, false);
+	Node end(4, 2, false);
 	end.mark = 'E';
 
 	Map map;
