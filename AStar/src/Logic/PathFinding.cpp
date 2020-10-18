@@ -110,8 +110,6 @@ void PathFinding::FindPath(Node& startNode, Node& endNode)
 				neighbour.m_GCost = newCostToNeighbour;
 				neighbour.m_HCost = CalculateHCost(neighbour, endNode);
 				CalculateFCost(neighbour);
-
-				std::cout << "Setting the parent --> ";
 				neighbour.m_Parent = new Node(currentNode.m_PosX, currentNode.m_PosY, false);
 
 				neighbour.Print();
@@ -125,20 +123,6 @@ void PathFinding::FindPath(Node& startNode, Node& endNode)
 			map.Add(currentNode);
 			//currentNode.Print();
 		}
-
-
-
-		std::cout << "\n";
-		std::cout << "--------EXPLORING NEIGHBOURS FOR NODE";
-		currentNode.Print();
-
-		for (const auto& node : neighbours)
-		{
-			node.Print();
-		}
-
-		std::cout << "---------NEIGHBOURS FINISH-------------" << std::endl;
-		std::cout << "\n";
 
 		if (currentNode == endNode)
 		{
