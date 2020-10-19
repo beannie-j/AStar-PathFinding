@@ -1,5 +1,9 @@
 #pragma once
 #include "Layer.h"
+#include "PathFinding.h"
+#include "Map.h" 
+
+#include <SFML/Graphics.hpp>
 
 class ApplicationLayer : public Layer
 {
@@ -11,6 +15,18 @@ public:
 	virtual void OnEvent(sf::Event& event) override;
 
 private:
+	static bool running;
 
+	Node startNode;
+	Node endNode;
+	PathFinding p;
+	Map map;
+
+	const float Block_Size = 40;
+
+	void DrawGrid(sf::RenderWindow& window);
+	void DrawNode(sf::RenderWindow& window, Node node, sf::Color color);
+	void DrawObstacles(sf::RenderWindow& window);
+	void DrawPathNodes(sf::RenderWindow& window);
 };
 

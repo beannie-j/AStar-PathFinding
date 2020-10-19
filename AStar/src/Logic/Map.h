@@ -1,11 +1,14 @@
 #pragma once
 #include "Node.h"
+#include <vector>
 
 class Map
 {
 public:
 	static constexpr int GridWidth = 20;
 	static constexpr int GridHeight = 10;
+
+	static constexpr float NodeCellSize = 50.f;
 
 	using NodeGrid = Node[GridWidth * GridHeight];
 
@@ -20,6 +23,10 @@ public:
 	NodeGrid& GetGrid();
 
 	Node& GetNode(int x, int y);
+
+	std::vector<Node> GetObstacles();
+	std::vector<Node> GetPathNodes();
+
 
 	Map();
 	~Map();

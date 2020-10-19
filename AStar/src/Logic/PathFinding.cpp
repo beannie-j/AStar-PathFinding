@@ -15,56 +15,12 @@ void PathFinding::FindPath(Node& startNode, Node& endNode)
 	std::vector<Node> closedSet;
 	std::vector<Node> path;
 
-	Node obstacle1(3, 3, true);
-	obstacle1.mark = 'X';
-
-	Node obstacle2(5, 3, true);
-	obstacle2.mark = 'X';
-
-	Node obstacle3(3, 1, true);
-	obstacle3.mark = 'X';
-
-	Node obstacle4(5, 2, true);
-	obstacle4.mark = 'X';
-
-	Node obstacle5(6, 2, true);
-	obstacle5.mark = 'X';
-
 	auto& map = Map::Get();
-
-	map.Init();
-	//startNode.m_Parent = &Node(0, 0, false);
-	map.Add(startNode);
-
-	//endNode.m_Parent = &Node(0, 0, false);
-	map.Add(endNode);
-
-	map.Add(obstacle1);
-	map.Add(obstacle2);
-	map.Add(obstacle3);
-	map.Add(obstacle4);
-	map.Add(obstacle5);
-	map.Draw();
 
 	openSet.push_back(startNode);
 
 	while (!openSet.empty())
 	{
-		
-
-		/*
-		for (int i = 1; i < openSet.size(); i++) {
-			if (openSet[i].m_FCost < currentNode.m_FCost || openSet[i].m_FCost == currentNode.m_FCost) {
-				if (openSet[i].m_HCost < currentNode.m_HCost)
-				{
-					currentNode = openSet[i];
-				}
-			}
-		}*/
-		
-		
-		
-		
 		std::sort(openSet.begin(), openSet.end(), [](auto& nodeA, auto& nodeB)
 			{
 				return (nodeA.m_FCost < nodeB.m_FCost ||
@@ -74,7 +30,6 @@ void PathFinding::FindPath(Node& startNode, Node& endNode)
 
 		Node currentNode = openSet[0];
 
-		
 		std::cout << "\n";
 		std::cout << "--------OPEN SET START-------------" << std::endl;
 
@@ -114,19 +69,16 @@ void PathFinding::FindPath(Node& startNode, Node& endNode)
 
 				neighbour.Print();
 
-
 				if (!Contains(openSet, neighbour))
 				{
 					openSet.push_back(neighbour);
 				}
 			}
 			map.Add(currentNode);
-			//currentNode.Print();
 		}
 
 		if (currentNode == endNode)
 		{
-			//currentNode.Print();
 			RetracePath(startNode, endNode);
 			return;
 		}
@@ -211,10 +163,9 @@ bool PathFinding::RetracePath(Node& startNode, Node& endNode)
 
 	for (Node& node : path)
 	{
-		node.mark = 'P';
+		node.m_Mark = 'P';
 		map.Add(node);
 		node.Print();
-
 	}
 
 	map.Add(endNode);

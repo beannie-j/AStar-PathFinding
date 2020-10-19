@@ -1,7 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-#include <Map.h>
+#include "Map.h"
+#include "Layer.h"
 
 struct Grid
 {
@@ -12,16 +13,22 @@ struct Grid
 class Application
 {
 private:
-	inline static constexpr unsigned int Width = 100;
-	inline static constexpr unsigned int Height = 150;
+	
 
 public:
+	inline static constexpr unsigned int Width = 1500;
+	inline static constexpr unsigned int Height = 1500;
+
 	Application();
 	~Application();
 
 	sf::RenderWindow* s_Window = nullptr;
+	Layer* s_CurrentLayer = nullptr;
 
-	Application& Get();
+	static Application& Get();
+	sf::RenderWindow& GetWindow();
+
+	void SetLayer(Layer* layer);
 	void Init();
 	void Draw();
 	void Run();
