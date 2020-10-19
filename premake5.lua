@@ -22,13 +22,21 @@ workspace "AStar-PathFinding"
             "%{prj.location}/AStar/src/Logic/*.h",
             "%{prj.location}/AStar/src/Logic/*.cpp",
 			"%{prj.location}/AStar/src/Graphics/*.cpp",
-			"%{prj.location}/AStar/src/Graphics/*.h"
+			"%{prj.location}/AStar/src/Graphics/*.h",
+			"%{prj.location}/AStar/src/Graphics/Layers/*.cpp",
+			"%{prj.location}/AStar/src/Graphics/Layers/*.h",
+			"%{prj.location}/AStar/src/Application/*.cpp",
+			"%{prj.location}/AStar/src/Application/*.h"
         }
 
 		includedirs
 		{
 			"%{prj.location}",
-			"%{prj.location}/Dependencies/include"
+			"%{prj.location}/Dependencies/include",
+			"%{prj.location}/AStar/src/Logic",
+			"%{prj.location}/AStar/src/Graphics",
+			"%{prj.location}/AStar/src/Graphics/Layers",
+			"%{prj.location}/AStar/src/Application"
 		}
 
 		filter "system:windows"
