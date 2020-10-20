@@ -26,7 +26,9 @@ workspace "AStar-PathFinding"
 			"%{prj.location}/AStar/src/Graphics/Layers/*.cpp",
 			"%{prj.location}/AStar/src/Graphics/Layers/*.h",
 			"%{prj.location}/AStar/src/Application/*.cpp",
-			"%{prj.location}/AStar/src/Application/*.h"
+			"%{prj.location}/AStar/src/Application/*.h",
+			"%{prj.location}/AStar/src/Graphics/util/*.cpp",
+			"%{prj.location}/AStar/src/Graphics/util/*.h",
         }
 
 		includedirs
@@ -36,6 +38,7 @@ workspace "AStar-PathFinding"
 			"%{prj.location}/AStar/src/Logic",
 			"%{prj.location}/AStar/src/Graphics",
 			"%{prj.location}/AStar/src/Graphics/Layers",
+			"%{prj.location}/AStar/src/Graphics/util",
 			"%{prj.location}/AStar/src/Application"
 		}
 

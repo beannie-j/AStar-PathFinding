@@ -9,7 +9,7 @@ void ApplicationLayer::OnInit()
 {
 	//running = true;
 
-	startNode = Node(11, 8, false);
+	startNode = Node(15, 20, false);
 	startNode.m_Mark = 'S';
 	//Node start(3, 8, false);
 	//Node start(9, 2, false);
@@ -44,7 +44,7 @@ void ApplicationLayer::OnInit()
 
 	map.Draw();
 
-	p.FindPath(startNode, endNode);
+	map.currentNode = &startNode;
 }
 
 void ApplicationLayer::OnShutDown()
@@ -57,10 +57,21 @@ void ApplicationLayer::OnUpdate()
 	sf::RenderWindow& window = app.GetWindow();
 
 	DrawGrid(window);
+
 	DrawNode(window, startNode, sf::Color::Red);
 	DrawNode(window, endNode, sf::Color::Green);
 
 	DrawObstacles(window);
+
+	DrawNode(window, *map.currentNode, sf::Color::White);
+
+	while (!app.isPathFound)
+	{
+		std::cout << "*Current Node :";
+		map.currentNode->Print();
+		p.FindPath(startNode, endNode);
+	}
+
 	DrawPathNodes(window);
 }
 
@@ -125,8 +136,6 @@ void ApplicationLayer::DrawObstacles(sf::RenderWindow& window)
 
 		window.draw(text);
 	}
-
-
 }
 
 void ApplicationLayer::DrawPathNodes(sf::RenderWindow& window)

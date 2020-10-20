@@ -32,6 +32,7 @@ void Application::SetLayer(Layer* layer)
 void Application::Init()
 {
 	s_Window = new sf::RenderWindow(sf::VideoMode(Application::Width, Application::Height), "Path Finder");
+	isPathFound = false;
 }
 
 void Application::Draw()

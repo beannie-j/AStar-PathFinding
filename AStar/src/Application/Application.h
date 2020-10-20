@@ -22,6 +22,7 @@ public:
 	Application();
 	~Application();
 
+	bool isPathFound;
 	sf::RenderWindow* s_Window = nullptr;
 	Layer* s_CurrentLayer = nullptr;
 
