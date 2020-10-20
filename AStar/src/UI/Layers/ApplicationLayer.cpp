@@ -54,7 +54,7 @@ void ApplicationLayer::Render()
 	window.draw(Sprite_LocationPin);
 
 	DrawObstacles(window);
-
+	// Painting the neighbours and current node isnt working :(
 	/*
 	DrawNode(window, *map.currentNode, sf::Color(255, 219, 88));
 	for (const Node& node : map.currentNode->GetNeighbours())

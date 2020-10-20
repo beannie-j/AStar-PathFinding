@@ -30,26 +30,8 @@ void PathFinding::FindPath(Node& startNode, Node& endNode)
 			});
 
 		Node currentNode = openSet[0];
-		std::cout << " ************** CURRENT NODE";
 		map.currentNode = &currentNode;
-		map.currentNode->Print();
 
-		/*
-		std::cout << "\n";
-		std::cout << "--------OPEN SET START-------------" << std::endl;
-
-		for (const auto& node : openSet)
-		{
-			node.Print();
-		}
-
-		std::cout << "---------OPEN SET FINISH-------------" << std::endl;
-		std::cout << "\n";
-
-		std::cout << "---------CURRENT NODE-------------" << std::endl;
-		currentNode.Print();
-		std::cout << "-------------------------------" << std::endl;
-		*/
 		openSet.erase(std::remove(openSet.begin(), openSet.end(), currentNode), openSet.end());
 		closedSet.push_back(currentNode);
 
@@ -162,7 +144,6 @@ bool PathFinding::RetracePath(Node& startNode, Node& endNode)
 
 	map.Add(endNode);
 	map.Draw();
-
 
 	if (*path[path.size() - 1].m_Parent == startNode)
 	{

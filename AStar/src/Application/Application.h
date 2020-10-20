@@ -16,8 +16,8 @@ private:
 	
 
 public:
-	inline static constexpr unsigned int Width = 1500;
-	inline static constexpr unsigned int Height = 1500;
+	inline static constexpr uint32_t Width = 1500;
+	inline static constexpr uint32_t Height = 1500;
 
 	Application();
 	~Application();
