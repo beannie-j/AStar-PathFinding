@@ -87,6 +87,20 @@ std::vector<Node> Map::GetPathNodes()
 	return PathNodes;
 }
 
+void Map::ResetPath()
+{
+	for (int y = 0; y < GridHeight; y++)
+	{
+		for (int x = 0; x < GridWidth; x++)
+		{
+			if (grid[x + y * GridWidth].m_Mark == 'P')
+			{
+				grid[x + y * GridWidth].m_Mark = '.';
+			}
+		}
+	}
+}
+
 Map::Map()
 {
 	s_Instance = this;

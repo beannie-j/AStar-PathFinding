@@ -5,8 +5,8 @@
 class Map
 {
 public:
-	static constexpr int GridWidth = 20;
-	static constexpr int GridHeight = 27;
+	static constexpr int GridWidth = 30;
+	static constexpr int GridHeight = 29;
 	static constexpr float NodeCellSize = 50.0f;
 
 	Node* currentNode = nullptr;
@@ -25,6 +25,8 @@ public:
 
 	std::vector<Node> GetObstacles();
 	std::vector<Node> GetPathNodes();
+
+	void ResetPath();
 
 	Map();
 	~Map();

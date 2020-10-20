@@ -30,7 +30,9 @@ void PathFinding::FindPath(Node& startNode, Node& endNode)
 			});
 
 		Node currentNode = openSet[0];
+		std::cout << " ************** CURRENT NODE";
 		map.currentNode = &currentNode;
+		map.currentNode->Print();
 
 		/*
 		std::cout << "\n";
@@ -69,10 +71,6 @@ void PathFinding::FindPath(Node& startNode, Node& endNode)
 				neighbour.m_HCost = CalculateHCost(neighbour, endNode);
 				CalculateFCost(neighbour);
 				neighbour.m_Parent = new Node(currentNode.m_PosX, currentNode.m_PosY, false);
-				/*
-				std::cout << "Exploring neighbour --> ";
-				neighbour.Print();
-				*/
 
 				if (!Contains(openSet, neighbour))
 				{
@@ -144,18 +142,6 @@ bool PathFinding::RetracePath(Node& startNode, Node& endNode)
 	auto& map = Map::Get();
 	auto& grid = map.GetGrid();
 
-	/*
-	for (int y = 0; y < Map::GridHeight; y++)
-	{
-		for (int x = 0; x < Map::GridWidth; x++)
-		{
-			if (grid[x + y * Map::GridWidth].m_Parent)
-			{
-				grid[x + y * Map::GridWidth].Print();
-			}
-		}
-		std::cout << "\n";
-	}*/
 	std::cout << "Path: \n";
 
 	std::vector<Node> path;

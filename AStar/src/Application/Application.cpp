@@ -35,7 +35,7 @@ void Application::Init()
 	isPathFound = false;
 }
 
-void Application::Draw()
+void Application::Render()
 {
 	while (s_Window->isOpen())
 	{
@@ -58,7 +58,7 @@ void Application::Draw()
 void Application::Run()
 {
 	SetLayer(new ApplicationLayer());
-	Draw();
+	Render();
 }
 
 void Application::ShutDown()

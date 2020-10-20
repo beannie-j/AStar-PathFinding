@@ -31,7 +31,7 @@ public:
 
 	void SetLayer(Layer* layer);
 	void Init();
-	void Draw();
+	void Render();
 	void Run();
 	void ShutDown();
 };
