@@ -83,7 +83,7 @@ void ApplicationLayer::Render()
 		endNode.m_Mark = 'E';
 		map.Add(endNode);
 
-		while (!app.isPathFound)
+		if (!app.isPathFound)
 		{
 			p.FindPath(startNode, endNode);
 		}

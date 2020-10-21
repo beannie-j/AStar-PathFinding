@@ -9,7 +9,7 @@
 
 bool cmp(Node nodeA, Node nodeB) { return (nodeA.m_FCost < nodeB.m_FCost || nodeA.m_FCost == nodeB.m_FCost && nodeA.m_HCost < nodeB.m_HCost); }
 
-void PathFinding::FindPath(Node& startNode, Node& endNode)
+bool PathFinding::FindPath(const Node& startNode, const Node& endNode)
 {
 	std::vector<Node> neighbours;
 	std::vector<Node> openSet;
@@ -62,15 +62,19 @@ void PathFinding::FindPath(Node& startNode, Node& endNode)
 			map.Add(currentNode);
 		}
 
+		
+
 		if (currentNode == endNode)
 		{
 			if (RetracePath(startNode, endNode))
 			{
 				app.isPathFound = true;
+				return true;
 			}
-			return;
+			return false;
 		}
 	}
+	return false;
 }
 
 //diagonal move is cost 14, vertical/ horizontal move is cost 10
@@ -119,7 +123,7 @@ bool PathFinding::Contains(std::vector<Node> vec, Node _node)
 	return false;
 }
 
-bool PathFinding::RetracePath(Node& startNode, Node& endNode)
+bool PathFinding::RetracePath(const Node& startNode, const Node& endNode)
 {
 	auto& map = Map::Get();
 	auto& grid = map.GetGrid();

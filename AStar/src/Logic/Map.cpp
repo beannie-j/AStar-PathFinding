@@ -31,7 +31,7 @@ void Map::Draw()
 	}
 }
 
-void Map::Add(Node& node)
+void Map::Add(const Node& node)
 {
 	int x = node.m_PosX;
 	int y = node.m_PosY;
@@ -93,7 +93,7 @@ void Map::ResetPath()
 	{
 		for (int x = 0; x < GridWidth; x++)
 		{
-			if (grid[x + y * GridWidth].m_Mark == 'P')
+			if (grid[x + y * GridWidth].m_Mark == 'P' || grid[x + y * GridWidth].m_Mark == 'E' || grid[x + y * GridWidth].m_Mark == 'O')
 			{
 				grid[x + y * GridWidth].m_Mark = '.';
 			}

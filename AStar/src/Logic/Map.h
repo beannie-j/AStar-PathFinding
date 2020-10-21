@@ -16,7 +16,7 @@ public:
 
 	void Init();
 	void Draw();
-	void Add(Node& node);
+	void Add(const Node& node);
 
 	static Map& Get();
 
