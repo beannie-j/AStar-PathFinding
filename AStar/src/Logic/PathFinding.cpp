@@ -7,13 +7,18 @@
 #include <algorithm>
 #include <iostream>
 
-bool cmp(Node nodeA, Node nodeB) { return (nodeA.m_FCost < nodeB.m_FCost || nodeA.m_FCost == nodeB.m_FCost && nodeA.m_HCost < nodeB.m_HCost); }
-
+struct PathFindingResult
+{
+	bool pathFound = false;
+	std::vector<Node> openSet;
+};
 bool PathFinding::FindPath(const Node& startNode, const Node& endNode)
 {
 	std::vector<Node> neighbours;
 	std::vector<Node> openSet;
 	std::vector<Node> closedSet;
+
+	PathFindingResult result;
 
 	auto& app = Application::Get();
 	auto& map = Map::Get();
@@ -35,6 +40,9 @@ bool PathFinding::FindPath(const Node& startNode, const Node& endNode)
 		openSet.erase(std::remove(openSet.begin(), openSet.end(), currentNode), openSet.end());
 		closedSet.push_back(currentNode);
 
+		currentNode.m_Mark = 'V';
+		map.Add(currentNode);
+
 		auto neighbours = currentNode.GetNeighbours();
 		for (Node& neighbour : neighbours)
 		{
@@ -47,8 +55,6 @@ bool PathFinding::FindPath(const Node& startNode, const Node& endNode)
 			int newCostToNeighbour = currentNode.m_GCost + GetDistance(currentNode, neighbour);
 			if (newCostToNeighbour < neighbour.m_GCost || !Contains(openSet, neighbour))
 			{
-				
-
 				neighbour.m_GCost = newCostToNeighbour;
 				neighbour.m_HCost = CalculateHCost(neighbour, endNode);
 				CalculateFCost(neighbour);
@@ -62,16 +68,14 @@ bool PathFinding::FindPath(const Node& startNode, const Node& endNode)
 			map.Add(currentNode);
 		}
 
-		
-
 		if (currentNode == endNode)
 		{
 			if (RetracePath(startNode, endNode))
 			{
 				app.isPathFound = true;
+				
 				return true;
 			}
-			return false;
 		}
 	}
 	return false;
@@ -146,6 +150,7 @@ bool PathFinding::RetracePath(const Node& startNode, const Node& endNode)
 		node.Print();
 	}
 
+	map.Add(startNode);
 	map.Add(endNode);
 	map.Draw();
 

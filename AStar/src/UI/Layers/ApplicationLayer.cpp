@@ -45,6 +45,8 @@ void ApplicationLayer::Render()
 	auto& window = app.GetWindow();
 
 	DrawGrid(window);
+	DrawPathNodes(window);
+
 	DrawNode(window, startNode, sf::Color::Red);
 	DrawNode(window, endNode, sf::Color::Green);
 
@@ -54,15 +56,7 @@ void ApplicationLayer::Render()
 	window.draw(Sprite_LocationPin);
 
 	DrawObstacles(window);
-	// Painting the neighbours and current node isnt working :(
-	/*
-	DrawNode(window, *map.currentNode, sf::Color(255, 219, 88));
-	for (const Node& node : map.currentNode->GetNeighbours())
-	{
-		DrawNode(window, node, sf::Color(255, 177, 88));
-	}
-	*/
-	DrawPathNodes(window);
+	DrawVisitedNodes(window);
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
@@ -158,5 +152,15 @@ void ApplicationLayer::DrawPathNodes(sf::RenderWindow& window)
 	for (const Node& pathNode : pathNodes)
 	{
 		DrawNode(window, pathNode, sf::Color(135, 206, 235));
+	}
+}
+
+void ApplicationLayer::DrawVisitedNodes(sf::RenderWindow& window)
+{
+	std::vector<Node> visitedNodes = map.GetVisitedNodes();
+
+	for (const Node& v : visitedNodes)
+	{
+		DrawNode(window, v, sf::Color(255, 177, 88));
 	}
 }

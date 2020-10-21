@@ -87,13 +87,30 @@ std::vector<Node> Map::GetPathNodes()
 	return PathNodes;
 }
 
+std::vector<Node> Map::GetVisitedNodes()
+{
+	std::vector<Node> VisitedNodes;
+
+	for (int y = 0; y < GridHeight; y++)
+	{
+		for (int x = 0; x < GridWidth; x++)
+		{
+			if (grid[x + y * GridWidth].m_Mark == 'V')
+			{
+				VisitedNodes.push_back(GetNode(x, y));
+			}
+		}
+	}
+	return VisitedNodes;
+}
+
 void Map::ResetPath()
 {
 	for (int y = 0; y < GridHeight; y++)
 	{
 		for (int x = 0; x < GridWidth; x++)
 		{
-			if (grid[x + y * GridWidth].m_Mark == 'P' || grid[x + y * GridWidth].m_Mark == 'E' || grid[x + y * GridWidth].m_Mark == 'O')
+			if (grid[x + y * GridWidth].m_Mark == 'P' || grid[x + y * GridWidth].m_Mark == 'E' || grid[x + y * GridWidth].m_Mark == 'V')
 			{
 				grid[x + y * GridWidth].m_Mark = '.';
 			}

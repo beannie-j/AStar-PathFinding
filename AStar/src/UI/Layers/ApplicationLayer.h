@@ -38,5 +38,7 @@ private:
 	void DrawNode(sf::RenderWindow& window, Node node, sf::Color color);
 	void DrawObstacles(sf::RenderWindow& window);
 	void DrawPathNodes(sf::RenderWindow& window);
+	void DrawVisitedNodes(sf::RenderWindow& window);
+
 };
 
