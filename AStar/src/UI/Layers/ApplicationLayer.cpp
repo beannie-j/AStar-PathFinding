@@ -23,23 +23,24 @@ void ApplicationLayer::OnInit()
 	Texture_Arrow.loadFromFile("Assets/arrow.png");
 	Sprite_Arrow.setTexture(Texture_Arrow);
 	Sprite_Arrow.setScale(0.1f, 0.1f);
-}
+} 
 
 void ApplicationLayer::OnShutDown()
 {
 }
 
-void ApplicationLayer::OnUpdate()
+void ApplicationLayer::OnUpdate(Timestep ts)
 {
-	Render();
-	Update();
+	std::cout << "Delta time: {0}s {1}ms " << ts.GetSeconds() << " " << ts.GetMilliseconds() << std::endl;
+	Render(ts);
+	Update(ts);
 }
 
 void ApplicationLayer::OnEvent(sf::Event& event)
 {
 }
 
-void ApplicationLayer::Render()
+void ApplicationLayer::Render(Timestep ts)
 {
 	auto& app = Application::Get();
 	auto& window = app.GetWindow();
@@ -77,16 +78,12 @@ void ApplicationLayer::Render()
 		endNode.m_Mark = 'E';
 		map.Add(endNode);
 
-		if (!app.isPathFound)
-		{
-			p.FindPath(startNode, endNode);
-		}
+		p.FindPath(startNode, endNode);
 		map.Draw();
-		app.isPathFound = false;
 	}
 }
 
-void ApplicationLayer::Update()
+void ApplicationLayer::Update(Timestep ts)
 {
 	auto& app = Application::Get();
 	auto& window = app.GetWindow();

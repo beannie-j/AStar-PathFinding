@@ -72,7 +72,6 @@ bool PathFinding::FindPath(const Node& startNode, const Node& endNode)
 		{
 			if (RetracePath(startNode, endNode))
 			{
-				app.isPathFound = true;
 				
 				return true;
 			}

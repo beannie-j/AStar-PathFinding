@@ -2,6 +2,7 @@
 #include "Layer.h"
 #include "PathFinding.h"
 #include "Map.h" 
+#include "Timestep.h"
 
 #include <SFML/Graphics.hpp>
 
@@ -11,7 +12,7 @@ public:
 	virtual void OnInit() override;
 	virtual void OnShutDown() override;
 
-	virtual void OnUpdate() override;
+	virtual void OnUpdate(Timestep ts) override;
 	virtual void OnEvent(sf::Event& event) override;
 
 private:
@@ -30,8 +31,8 @@ private:
 	sf::Texture Texture_Arrow;
 	sf::Sprite Sprite_Arrow;
 
-	void Render();
-	void Update();
+	void Render(Timestep ts);
+	void Update(Timestep ts);
 
 	sf::Vector2i GetMousePos(sf::RenderWindow& window);
 	void DrawGrid(sf::RenderWindow& window);

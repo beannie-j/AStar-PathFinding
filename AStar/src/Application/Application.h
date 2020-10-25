@@ -3,6 +3,7 @@
 
 #include "Map.h"
 #include "Layer.h"
+#include "Timestep.h"
 
 struct Grid
 {
@@ -13,7 +14,9 @@ struct Grid
 class Application
 {
 private:
-	
+	sf::Clock clock;
+	sf::Time time;
+	float m_LastFrameTime = 0.0f;
 
 public:
 	inline static constexpr uint32_t Width = 1500;

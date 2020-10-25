@@ -39,6 +39,10 @@ void Application::Render()
 {
 	while (s_Window->isOpen())
 	{
+		float time = clock.getElapsedTime().asSeconds();
+		Timestep timestep = time - m_LastFrameTime;
+		m_LastFrameTime = time;
+
 		sf::Event event;
 
 		while (s_Window->pollEvent(event))
@@ -50,10 +54,10 @@ void Application::Render()
 		}
 
 		s_Window->clear(sf::Color::Black);
-		s_CurrentLayer->OnUpdate();
+		s_CurrentLayer->OnUpdate(timestep);
 		s_Window->display();
 	}
-}
+} 
 
 void Application::Run()
 {

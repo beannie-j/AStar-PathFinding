@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Window/Event.hpp>
+#include "Timestep.h"
 
 class Layer
 {
@@ -11,7 +12,7 @@ public:
 	virtual void OnInit() {};
 	virtual void OnShutDown() {};
 
-	virtual void OnUpdate() {};
+	virtual void OnUpdate(Timestep ts) {};
 	virtual void OnEvent(sf::Event& event) {};
 
 };

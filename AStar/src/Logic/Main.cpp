@@ -11,7 +11,6 @@ int main()
 	//PathFinding p;	
 	//width 20, height 10
 
-
 	//Map map;
 
 	//map.Add(start);
