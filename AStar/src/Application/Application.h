@@ -17,6 +17,7 @@ private:
 	sf::Clock clock;
 	sf::Time time;
 	float m_LastFrameTime = 0.0f;
+	bool m_Running = false;
 
 public:
 	inline static constexpr uint32_t Width = 1500;
@@ -25,7 +26,6 @@ public:
 	Application();
 	~Application();
 
-	bool isPathFound;
 	sf::RenderWindow* s_Window = nullptr;
 	Layer* s_CurrentLayer = nullptr;
 

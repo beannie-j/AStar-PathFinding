@@ -3,13 +3,19 @@
 
 #include <vector>
 
+struct PathFindingResult
+{
+	bool pathFound = false;
+	std::vector<Node> closedSet;
+};
+
 class PathFinding
 {
 public:
 
 	std::vector<Node> path;
 
-	bool FindPath(const Node& startNode, const Node& endNode);
+	PathFindingResult FindPath(const Node& startNode, const Node& endNode);
 	int GetDistance(Node A, Node B);
 	int CalculateGCost(Node& node, const Node& startNode);
 	int CalculateHCost(Node& node, const Node& endNode);
@@ -19,4 +25,3 @@ public:
 
 	PathFinding() = default;
 };
-

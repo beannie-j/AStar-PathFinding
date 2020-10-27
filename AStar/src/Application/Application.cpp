@@ -32,12 +32,12 @@ void Application::SetLayer(Layer* layer)
 void Application::Init()
 {
 	s_Window = new sf::RenderWindow(sf::VideoMode(Application::Width, Application::Height), "Path Finder");
-	isPathFound = false;
+	m_Running = true;
 }
 
 void Application::Render()
 {
-	while (s_Window->isOpen())
+	while (m_Running)
 	{
 		float time = clock.getElapsedTime().asSeconds();
 		Timestep timestep = time - m_LastFrameTime;
@@ -48,7 +48,10 @@ void Application::Render()
 		while (s_Window->pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
+			{
 				s_Window->close();
+				ShutDown();
+			}
 			
 			s_CurrentLayer->OnEvent(event);
 		}
@@ -67,6 +70,8 @@ void Application::Run()
 
 void Application::ShutDown()
 {
+	// why exception here?
+	m_Running = false;
 	//delete s_Application;
 	//delete s_Window;
 }

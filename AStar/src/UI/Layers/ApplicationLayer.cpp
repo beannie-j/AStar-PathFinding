@@ -31,13 +31,64 @@ void ApplicationLayer::OnShutDown()
 
 void ApplicationLayer::OnUpdate(Timestep ts)
 {
-	std::cout << "Delta time: {0}s {1}ms " << ts.GetSeconds() << " " << ts.GetMilliseconds() << std::endl;
 	Render(ts);
 	Update(ts);
+
+	// Process timed functions
+	//std::cout << "Delta time: {0}s {1}ms " << ts.GetSeconds() << " " << ts.GetMilliseconds() << std::endl;
+	for (auto it = m_TimedFunctionQueue.begin(); it != m_TimedFunctionQueue.end(); )
+	{
+		auto& tf = *it;
+		tf.Time -= ts.GetSeconds();
+		//std::cout << tf.Time << std::endl;
+		if (tf.Time <= 0.0f)
+		{
+			tf.Function();
+			it = m_TimedFunctionQueue.erase(it);
+		}
+		else
+		{
+			it++;
+		}
+	}
 }
 
 void ApplicationLayer::OnEvent(sf::Event& event)
 {
+	auto& app = Application::Get();
+	auto& window = app.GetWindow();
+
+	int x = (GetMousePos(window).x - 10) / Map::NodeCellSize;
+	int y = (GetMousePos(window).y - 10) / Map::NodeCellSize;
+
+	bool startNodeBounds = (x == startNode.m_PosX && y == startNode.m_PosY);
+	bool endNodeBounds = (x == endNode.m_PosX && y == endNode.m_PosY);
+
+
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	{
+		int x = (GetMousePos(window).x - 10) / Map::NodeCellSize;
+		int y = (GetMousePos(window).y - 10) / Map::NodeCellSize;
+		//std::cout << "x " << x << "y " << y << std::endl;
+
+		if (!startNodeBounds && !endNodeBounds)
+		{
+			Node obstacle(x, y, true);
+			obstacle.m_Mark = 'X';
+			map.Add(obstacle);
+			DrawNode(window, obstacle, sf::Color(128, 128, 128));
+		}
+
+		if (startNodeBounds)
+		{
+			std::cout << "Start node\n";
+		}
+
+		if (endNodeBounds)
+		{
+			std::cout << "End node\n";
+		}
+	}
 }
 
 void ApplicationLayer::Render(Timestep ts)
@@ -45,8 +96,9 @@ void ApplicationLayer::Render(Timestep ts)
 	auto& app = Application::Get();
 	auto& window = app.GetWindow();
 
+	PathFindingResult result;
+
 	DrawGrid(window);
-	DrawPathNodes(window);
 
 	DrawNode(window, startNode, sf::Color::Red);
 	DrawNode(window, endNode, sf::Color::Green);
@@ -58,15 +110,12 @@ void ApplicationLayer::Render(Timestep ts)
 
 	DrawObstacles(window);
 	DrawVisitedNodes(window);
+	DrawPathNodes(window);
 
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Middle))
 	{
-		int x = (GetMousePos(window).x - 10) / Map::NodeCellSize;
-		int y = (GetMousePos(window).y - 10) / Map::NodeCellSize;
-		Node obstacle(x, y, true);
-		obstacle.m_Mark = 'X';
-		map.Add(obstacle);
-		DrawNode(window, obstacle, sf::Color(128, 128, 128));
+		std::cout << " Middle pressed" << std::endl;
+		m_TimedFunctionQueue.push_back({ 2.0f, [&]() { std::cout << "Hello!\n"; } });
 	}
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
@@ -77,7 +126,7 @@ void ApplicationLayer::Render(Timestep ts)
 		endNode = Node(x, y, false);
 		endNode.m_Mark = 'E';
 		map.Add(endNode);
-
+		
 		p.FindPath(startNode, endNode);
 		map.Draw();
 	}
@@ -138,7 +187,6 @@ void ApplicationLayer::DrawObstacles(sf::RenderWindow& window)
 
 		float cx = (obstacle.m_PosX * Map::NodeCellSize) + 10.f;
 		float cy = (obstacle.m_PosY * Map::NodeCellSize) + 10.f;
-
 	}
 }
 
@@ -148,6 +196,7 @@ void ApplicationLayer::DrawPathNodes(sf::RenderWindow& window)
 
 	for (const Node& pathNode : pathNodes)
 	{
+		//m_TimedFunctionQueue.push_back({ 2.0f, [&]() { DrawNode(window, pathNode, sf::Color(135, 206, 235)); } });
 		DrawNode(window, pathNode, sf::Color(135, 206, 235));
 	}
 }
@@ -158,6 +207,7 @@ void ApplicationLayer::DrawVisitedNodes(sf::RenderWindow& window)
 
 	for (const Node& v : visitedNodes)
 	{
+		//m_TimedFunctionQueue.push_back({ 2.0f, [&]() { DrawNode(window, v, sf::Color(255, 177, 88)); } });
 		DrawNode(window, v, sf::Color(255, 177, 88));
 	}
 }

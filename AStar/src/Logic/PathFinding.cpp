@@ -7,18 +7,13 @@
 #include <algorithm>
 #include <iostream>
 
-struct PathFindingResult
+PathFindingResult PathFinding::FindPath(const Node& startNode, const Node& endNode)
 {
-	bool pathFound = false;
-	std::vector<Node> openSet;
-};
-bool PathFinding::FindPath(const Node& startNode, const Node& endNode)
-{
+	PathFindingResult result;
+
 	std::vector<Node> neighbours;
 	std::vector<Node> openSet;
 	std::vector<Node> closedSet;
-
-	PathFindingResult result;
 
 	auto& app = Application::Get();
 	auto& map = Map::Get();
@@ -39,9 +34,6 @@ bool PathFinding::FindPath(const Node& startNode, const Node& endNode)
 
 		openSet.erase(std::remove(openSet.begin(), openSet.end(), currentNode), openSet.end());
 		closedSet.push_back(currentNode);
-
-		currentNode.m_Mark = 'V';
-		map.Add(currentNode);
 
 		auto neighbours = currentNode.GetNeighbours();
 		for (Node& neighbour : neighbours)
@@ -65,6 +57,7 @@ bool PathFinding::FindPath(const Node& startNode, const Node& endNode)
 					openSet.push_back(neighbour);
 				}
 			}
+			currentNode.m_Mark = 'V';
 			map.Add(currentNode);
 		}
 
@@ -72,12 +65,15 @@ bool PathFinding::FindPath(const Node& startNode, const Node& endNode)
 		{
 			if (RetracePath(startNode, endNode))
 			{
-				
-				return true;
+				result.pathFound = true;
+				result.closedSet = closedSet;
+				return result;
 			}
 		}
 	}
-	return false;
+	result.pathFound = false;
+	result.closedSet = closedSet;
+	return result;
 }
 
 //diagonal move is cost 14, vertical/ horizontal move is cost 10
@@ -131,8 +127,6 @@ bool PathFinding::RetracePath(const Node& startNode, const Node& endNode)
 	auto& map = Map::Get();
 	auto& grid = map.GetGrid();
 
-	std::cout << "Path: \n";
-
 	std::vector<Node> path;
 	Node currentNode = map.GetNode(endNode.m_PosX, endNode.m_PosY); // endNode
 
@@ -146,7 +140,6 @@ bool PathFinding::RetracePath(const Node& startNode, const Node& endNode)
 	{
 		node.m_Mark = 'P';
 		map.Add(node);
-		node.Print();
 	}
 
 	map.Add(startNode);
@@ -157,6 +150,5 @@ bool PathFinding::RetracePath(const Node& startNode, const Node& endNode)
 	{
 		return true;
 	}
-
 	return false;
 }

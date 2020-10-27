@@ -5,6 +5,8 @@
 #include "Timestep.h"
 
 #include <SFML/Graphics.hpp>
+#include <queue>
+#include <functional>
 
 class ApplicationLayer : public Layer
 {
@@ -25,11 +27,27 @@ private:
 
 	const float Block_Size = 40;
 
+	sf::Clock clock;
+
 	sf::Texture Texture_LocationPin;
 	sf::Sprite Sprite_LocationPin;
 
 	sf::Texture Texture_Arrow;
 	sf::Sprite Sprite_Arrow;
+
+	float m_LastFrameTime = 0.0f;
+
+	struct TimedFunction
+	{
+		float Time = 0.0f;
+		std::function<void()> Function;
+	};
+
+	std::vector<TimedFunction> m_TimedFunctionQueue;
+
+	/*
+	m_TimedFunctionQueue.push_back({ 1.0f, [&]() { DrawNode(window, v, sf::Color(255, 177, 88)); } });
+	*/
 
 	void Render(Timestep ts);
 	void Update(Timestep ts);
