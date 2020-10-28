@@ -8,6 +8,8 @@
 #include <queue>
 #include <functional>
 
+#include "util/Button.h"
+
 class ApplicationLayer : public Layer
 {
 public:
@@ -35,7 +37,11 @@ private:
 	sf::Texture Texture_Arrow;
 	sf::Sprite Sprite_Arrow;
 
+	std::unique_ptr<Button> m_NextStepButton;
+	Path m_Path;
+
 	float m_LastFrameTime = 0.0f;
+	bool m_BeginPathFinding = false; 
 
 	struct TimedFunction
 	{
@@ -58,6 +64,8 @@ private:
 	void DrawObstacles(sf::RenderWindow& window);
 	void DrawPathNodes(sf::RenderWindow& window);
 	void DrawVisitedNodes(sf::RenderWindow& window);
+
+	void DrawPath(sf::RenderWindow& window);
 
 };
 

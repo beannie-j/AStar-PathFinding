@@ -1,6 +1,9 @@
 #pragma once
 #include <vector>
 
+#include <array>
+#include <optional>
+
 class Node
 {
 public:
@@ -32,7 +35,7 @@ public:
 	int CalculateHCost(Node endNode);
 	int GetDistance(Node nodeA, Node nodeB);
 
-	std::vector<Node> GetNeighbours();
+	std::array<std::optional<Node>, 8> GetNeighbours();
 	void Print() const;
 
 	friend bool operator== (const Node& lhs, const Node& rhs);

@@ -11,6 +11,7 @@ void Maze::Create(int x, int y)
 	Map::NodeGrid& grid = map.GetGrid();
 	int VisitedCellsNum = 0;
 
+#if 0
 	Node node = map.GetNode(x, y);
 	std::vector<Node> neighbours = node.GetNeighbours();
 
@@ -28,7 +29,7 @@ void Maze::Create(int x, int y)
 	{
 		// pick random neighbour.
 	}
-
+#endif
 }
 
 bool Maze::Contains(std::stack<Node> stack, Node node)

@@ -23,16 +23,44 @@ void ApplicationLayer::OnInit()
 	Texture_Arrow.loadFromFile("Assets/arrow.png");
 	Sprite_Arrow.setTexture(Texture_Arrow);
 	Sprite_Arrow.setScale(0.1f, 0.1f);
+
+	sf::Font font;
+	font.loadFromFile("C:\\Fonts\\Arial.ttf");
+	m_NextStepButton = std::make_unique<Button>(50, 50, 80, 30, font, "Next Step", 16, sf::Color::White, sf::Color::White);
 } 
 
 void ApplicationLayer::OnShutDown()
 {
 }
 
+static float s_PathTime = 0.02f;
+static float s_PathTimer = s_PathTime;
+
 void ApplicationLayer::OnUpdate(Timestep ts)
 {
 	Render(ts);
 	Update(ts);
+
+	if (m_BeginPathFinding)
+	{
+		s_PathTimer -= ts;
+		if (s_PathTimer < 0.0f)
+		{
+			if (m_Path.NextStep())
+			{
+				if (m_Path.IsPathFound())
+				{
+					// path found!
+				}
+				else
+				{
+					// no path found
+				}
+				m_BeginPathFinding = false;
+			}
+			s_PathTimer = s_PathTime;
+		}
+	}
 
 	// Process timed functions
 	//std::cout << "Delta time: {0}s {1}ms " << ts.GetSeconds() << " " << ts.GetMilliseconds() << std::endl;
@@ -64,6 +92,26 @@ void ApplicationLayer::OnEvent(sf::Event& event)
 	bool startNodeBounds = (x == startNode.m_PosX && y == startNode.m_PosY);
 	bool endNodeBounds = (x == endNode.m_PosX && y == endNode.m_PosY);
 
+	if (event.type == sf::Event::KeyPressed)
+	{
+		if (event.key.code == sf::Keyboard::Space)
+		{
+			m_BeginPathFinding = true;
+
+			if (m_Path.NextStep())
+			{
+				if (m_Path.IsPathFound())
+				{
+					// path found!
+				}
+				else
+				{
+					// no path found
+				}
+			}
+		}
+	}
+
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
@@ -91,6 +139,23 @@ void ApplicationLayer::OnEvent(sf::Event& event)
 	}
 }
 
+void ApplicationLayer::DrawPath(sf::RenderWindow& window)
+{
+	const auto& openSet = m_Path.GetOpenSet();
+	const auto& closedSet = m_Path.GetClosedSet();
+
+	for (const auto& node : openSet)
+	{
+		DrawNode(window, node, sf::Color::Green);
+	}
+
+	for (const auto& node : closedSet)
+	{
+		DrawNode(window, node, sf::Color::Red);
+	}
+
+}
+
 void ApplicationLayer::Render(Timestep ts)
 {
 	auto& app = Application::Get();
@@ -103,14 +168,18 @@ void ApplicationLayer::Render(Timestep ts)
 	DrawNode(window, startNode, sf::Color::Red);
 	DrawNode(window, endNode, sf::Color::Green);
 
+	DrawPath(window);
+
 	Sprite_Arrow.setPosition((startNode.m_PosX * Map::NodeCellSize) + 10.f, (startNode.m_PosY * Map::NodeCellSize) + 10.f);
 	Sprite_LocationPin.setPosition((endNode.m_PosX * Map::NodeCellSize) + 10.f, (endNode.m_PosY * Map::NodeCellSize) + 10.f);
 	window.draw(Sprite_Arrow);
 	window.draw(Sprite_LocationPin);
 
+	m_NextStepButton->DrawButton(window);
+
 	DrawObstacles(window);
-	DrawVisitedNodes(window);
-	DrawPathNodes(window);
+	//DrawVisitedNodes(window);
+	//DrawPathNodes(window);
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Middle))
 	{
@@ -129,7 +198,10 @@ void ApplicationLayer::Render(Timestep ts)
 		
 		p.FindPath(startNode, endNode);
 		map.Draw();
+
+		m_Path.BeginPathFinding(startNode, endNode);
 	}
+
 }
 
 void ApplicationLayer::Update(Timestep ts)
