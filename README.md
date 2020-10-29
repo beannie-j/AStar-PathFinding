@@ -42,19 +42,12 @@
 
   <p align="center">
     This is a visualiser that implements the A* Path Finding algorithm. Let's find the shortest path to get somewhere!
-
-    <br />
-    <a href="https://github.com/beannie-j/AStar-PathFinding">View Demo</a>
-    ·
-    <a href="https://github.com/beannie-j/AStar-PathFinding/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/beannie-j/AStar-PathFinding/issues">Request Feature</a>
   </p>
 </p>
 
 
 
-<!-- TABLE OF CONTENTS -->
+<!-- TABLE OF CONTENTS 
 ## Table of Contents
 
 * [About the Project](#about-the-project)
@@ -66,7 +59,7 @@
 * [License](#license)
 * [Contact](#contact)
 
-
+-->
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
@@ -109,11 +102,11 @@ git clone https://github.com/beannie-j/AStar-PathFinding.git
 
 
 
-<!-- USAGE EXAMPLES -->
+<!-- USAGE EXAMPLES 
 ## Usage
 
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
+-->
 
 
 
