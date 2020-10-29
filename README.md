@@ -65,6 +65,8 @@
 
 This is a visualiser that implements the A* Path Finding algorithm. Let's find the shortest path to get somewhere!
 
+
+
 ![](https://i.gyazo.com/ef6e5ed429343cf3999e1669322c61c5.gif)
 
 <!-- 
@@ -143,7 +145,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 Jeannie An - [jeanniehjan@gmail.com](mailto:jeanniehjan@gmail.com) - email
 
-Project Link: [https://github.com/beannie-j/AStar-PathFinding](https://github.com/beannie-j/AStar-PathFinding)
 
 
 
