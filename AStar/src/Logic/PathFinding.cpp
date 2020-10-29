@@ -160,6 +160,7 @@ bool Path::RetracePath(const Node& startNode, const Node& endNode)
 	{
 		node.m_Mark = 'P';
 		map.Add(node);
+		m_PathSet.push_back(node);
 	}
 
 	map.Add(startNode);

@@ -21,6 +21,8 @@ public:
 
 	const std::vector<Node>& GetOpenSet() const { return m_OpenSet; }
 	const std::vector<Node>& GetClosedSet() const { return m_ClosedSet; }
+	const std::vector<Node>& GetPathSet() const { return m_PathSet; }
+
 private:
 	int CalculateGCost(Node& node, const Node& startNode);
 	int CalculateHCost(Node& node, const Node& endNode);
@@ -33,6 +35,7 @@ private:
 	Node m_StartNode, m_EndNode;
 	std::vector<Node> m_OpenSet;
 	std::vector<Node> m_ClosedSet;
+	std::vector<Node> m_PathSet;
 	bool m_PathFound = false;
 };
 

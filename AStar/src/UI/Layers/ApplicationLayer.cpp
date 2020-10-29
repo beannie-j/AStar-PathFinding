@@ -26,7 +26,6 @@ void ApplicationLayer::OnInit()
 
 	sf::Font font;
 	font.loadFromFile("C:\\Fonts\\Arial.ttf");
-	m_NextStepButton = std::make_unique<Button>(50, 50, 80, 30, font, "Next Step", 16, sf::Color::White, sf::Color::White);
 } 
 
 void ApplicationLayer::OnShutDown()
@@ -38,6 +37,8 @@ static float s_PathTimer = s_PathTime;
 
 void ApplicationLayer::OnUpdate(Timestep ts)
 {
+	auto& app = Application::Get();
+	auto& window = app.GetWindow();
 	Render(ts);
 	Update(ts);
 
@@ -50,7 +51,7 @@ void ApplicationLayer::OnUpdate(Timestep ts)
 			{
 				if (m_Path.IsPathFound())
 				{
-					// path found!
+
 				}
 				else
 				{
@@ -102,7 +103,6 @@ void ApplicationLayer::OnEvent(sf::Event& event)
 			{
 				if (m_Path.IsPathFound())
 				{
-					// path found!
 				}
 				else
 				{
@@ -143,6 +143,7 @@ void ApplicationLayer::DrawPath(sf::RenderWindow& window)
 {
 	const auto& openSet = m_Path.GetOpenSet();
 	const auto& closedSet = m_Path.GetClosedSet();
+	const auto& pathSet = m_Path.GetPathSet();
 
 	for (const auto& node : openSet)
 	{
@@ -152,6 +153,11 @@ void ApplicationLayer::DrawPath(sf::RenderWindow& window)
 	for (const auto& node : closedSet)
 	{
 		DrawNode(window, node, sf::Color::Red);
+	}
+
+	for (const auto& node : pathSet)
+	{
+		DrawNode(window, node, sf::Color::Blue);
 	}
 
 }
@@ -175,11 +181,8 @@ void ApplicationLayer::Render(Timestep ts)
 	window.draw(Sprite_Arrow);
 	window.draw(Sprite_LocationPin);
 
-	m_NextStepButton->DrawButton(window);
-
 	DrawObstacles(window);
 	//DrawVisitedNodes(window);
-	//DrawPathNodes(window);
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Middle))
 	{

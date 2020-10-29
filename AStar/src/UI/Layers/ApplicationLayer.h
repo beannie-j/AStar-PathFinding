@@ -37,7 +37,6 @@ private:
 	sf::Texture Texture_Arrow;
 	sf::Sprite Sprite_Arrow;
 
-	std::unique_ptr<Button> m_NextStepButton;
 	Path m_Path;
 
 	float m_LastFrameTime = 0.0f;
