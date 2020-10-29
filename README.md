@@ -41,10 +41,8 @@
   <h3 align="center">Path Finding Visualiser</h3>
 
   <p align="center">
-    YOUR_SHORT_DESCRIPTION
-    <br />
-    <a href="https://github.com/beannie-j/AStar-PathFinding"><strong>Explore the docs »</strong></a>
-    <br />
+    This is a visualiser that implements the A* Path Finding algorithm. Let's find the shortest path to get somewhere!
+
     <br />
     <a href="https://github.com/beannie-j/AStar-PathFinding">View Demo</a>
     ·
@@ -73,9 +71,12 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+![](https://i.gyazo.com/ef6e5ed429343cf3999e1669322c61c5.gif)
 
-<!-- GETTING STARTED 
+<!-- 
+<a href="https://gyazo.com/ef6e5ed429343cf3999e1669322c61c5"><img src="https://i.gyazo.com/ef6e5ed429343cf3999e1669322c61c5.gif" alt="Image from Gyazo" width="1800"/></a>
+
+GETTING STARTED 
 Here's a blank template to get started:
 **To avoid retyping too much info. Do a search and replace with your text editor for the following:**
 `github_username`, `repo_name`, `twitter_handle`, `email`
