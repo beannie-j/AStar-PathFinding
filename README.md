@@ -35,7 +35,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/beannie-j/AStar-PathFinding">
-    <img src="Assets/image.png" alt="Logo" width="80" height="80">
+    <img src="Assets/planning.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">Path Finding Visualiser</h3>
@@ -93,7 +93,7 @@ To get a local copy up and running follow these simple steps.
 
 ### Prerequisites
 
-`Path Finding Visualiser` is available for Windows. You should have Visual Studio 2019 installed from [here](https://visualstudio.microsoft.com/downloads/)
+`Path Finding Visualiser` is available for Windows. You should also have Visual Studio 2019 installed from [here](https://visualstudio.microsoft.com/downloads/)
 
 
 ### Installation
