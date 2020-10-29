@@ -35,7 +35,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/beannie-j/AStar-PathFinding">
-    <img src="Assets/planning.png" alt="Logo" width="80" height="80">
+    <img src="Assets/planing.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">Path Finding Visualiser</h3>
