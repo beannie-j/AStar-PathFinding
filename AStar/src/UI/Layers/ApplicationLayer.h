@@ -8,8 +8,6 @@
 #include <queue>
 #include <functional>
 
-#include "util/Button.h"
-
 class ApplicationLayer : public Layer
 {
 public:

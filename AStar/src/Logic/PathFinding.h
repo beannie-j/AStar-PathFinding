@@ -31,7 +31,6 @@ private:
 	int GetDistance(const Node& nodeA, const Node& nodeB) const;
 	bool RetracePath(const Node& startNode, const Node& endNode);
 private:
-	std::vector<Node> m_Path;
 	Node m_StartNode, m_EndNode;
 	std::vector<Node> m_OpenSet;
 	std::vector<Node> m_ClosedSet;

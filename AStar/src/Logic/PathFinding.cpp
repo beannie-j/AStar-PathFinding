@@ -14,7 +14,7 @@ void Path::BeginPathFinding(const Node& startNode, const Node& endNode)
 {
 	m_OpenSet.clear();
 	m_ClosedSet.clear();
-	m_Path.clear();
+	m_PathSet.clear();
 
 	m_StartNode = startNode;
 	m_EndNode = endNode;
@@ -83,9 +83,11 @@ bool Path::NextStep()
 
 	if (currentNode == m_EndNode)
 	{
-		m_PathFound = true;
 		if (RetracePath(m_StartNode, m_EndNode))
+		{
+			m_PathFound = true;
 			return true;
+		}
 	}
 
 	return false;

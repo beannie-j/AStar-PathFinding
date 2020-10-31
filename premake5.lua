@@ -30,7 +30,11 @@ workspace "AStar-PathFinding"
 			"%{prj.location}/AStar/src/UI/util/*.cpp",
 			"%{prj.location}/AStar/src/UI/util/*.h",
 			"%{prj.location}/AStar/src/Core/*.cpp",
-			"%{prj.location}/AStar/src/Core/*.h"
+			"%{prj.location}/AStar/src/Core/*.h",
+			"%{prj.location}/vendor/bin/imgui/*h",
+			"%{prj.location}/vendor/bin/imgui/*cpp",
+			"%{prj.location}/vendor/bin/imgui-sfml/*h",
+			"%{prj.location}/vendor/bin/imgui-sfml/*cpp"
         }
 
 		includedirs
@@ -42,7 +46,9 @@ workspace "AStar-PathFinding"
 			"%{prj.location}/AStar/src/UI/Layers",
 			"%{prj.location}/AStar/src/UI/util",
 			"%{prj.location}/AStar/src/Application",
-			"%{prj.location}/AStar/src/Core"
+			"%{prj.location}/AStar/src/Core",
+			"%{prj.location}/vendor/bin/imgui",
+			"%{prj.location}/vendor/bin/imgui-sfml"
 		}
 
 		filter "system:windows"

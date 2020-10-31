@@ -47,17 +47,17 @@ void ApplicationLayer::OnUpdate(Timestep ts)
 		s_PathTimer -= ts;
 		if (s_PathTimer < 0.0f)
 		{
-			if (m_Path.NextStep())
+			if (m_Path.NextStep()) 
 			{
 				if (m_Path.IsPathFound())
 				{
-
+					// path found
 				}
 				else
 				{
 					// no path found
 				}
-				m_BeginPathFinding = false;
+				m_BeginPathFinding = false; 
 			}
 			s_PathTimer = s_PathTime;
 		}
@@ -99,6 +99,7 @@ void ApplicationLayer::OnEvent(sf::Event& event)
 		{
 			m_BeginPathFinding = true;
 
+			/*
 			if (m_Path.NextStep())
 			{
 				if (m_Path.IsPathFound())
@@ -108,7 +109,7 @@ void ApplicationLayer::OnEvent(sf::Event& event)
 				{
 					// no path found
 				}
-			}
+			}*/
 		}
 	}
 

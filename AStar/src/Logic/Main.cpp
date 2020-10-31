@@ -8,16 +8,6 @@
 
 int main()
 {
-	//PathFinding p;	
-	//width 20, height 10
-
-	//Map map;
-
-	//map.Add(start);
-	//map.Add(end);
-
-	//map.Draw();
-
 	Application application;
 	application.Init();
 	application.Run();

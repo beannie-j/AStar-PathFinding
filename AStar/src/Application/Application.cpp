@@ -1,6 +1,12 @@
 #include "Application.h"
 #include "ApplicationLayer.h"
 
+#include <imgui.h>
+#include <imgui-SFML.h>
+
+
+#include <iostream>
+
 static Application* s_Application = nullptr;
 
 Application::Application()
@@ -33,11 +39,13 @@ void Application::Init()
 {
 	s_Window = new sf::RenderWindow(sf::VideoMode(Application::Width, Application::Height), "Path Finder");
 	s_Window->setKeyRepeatEnabled(false);
+	ImGui::SFML::Init(*s_Window);
 	m_Running = true;
 }
 
 void Application::Render()
 {
+	sf::Clock deltaClock;
 	while (m_Running)
 	{
 		float time = clock.getElapsedTime().asSeconds();
@@ -45,20 +53,28 @@ void Application::Render()
 		m_LastFrameTime = time;
 
 		sf::Event event;
-
+	
 		while (s_Window->pollEvent(event))
 		{
+			ImGui::SFML::ProcessEvent(event);
 			if (event.type == sf::Event::Closed)
 			{
 				s_Window->close();
 				ShutDown();
 			}
-			
 			s_CurrentLayer->OnEvent(event);
 		}
 
+		ImGui::SFML::Update(*s_Window, deltaClock.restart());
+
+		ImGui::Begin("Hello, world!");
+		ImGui::Button("Look at this pretty button");
+		ImGui::End();
+
 		s_Window->clear(sf::Color::Black);
 		s_CurrentLayer->OnUpdate(timestep);
+
+		ImGui::SFML::Render(*s_Window);
 		s_Window->display();
 	}
 } 
@@ -71,7 +87,6 @@ void Application::Run()
 
 void Application::ShutDown()
 {
-	// why exception here?
 	m_Running = false;
 	//delete s_Application;
 	//delete s_Window;
