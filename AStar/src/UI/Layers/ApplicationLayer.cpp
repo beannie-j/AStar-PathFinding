@@ -8,15 +8,15 @@
 
 void ApplicationLayer::OnInit()
 {
-	startNode = Node(15, 20, false);
+	startNode = Node(1, 1, false);
 	startNode.m_Mark = 'S';
 	map.Add(startNode);
 
 	map.Init();
 
 	Maze maze;
-	maze.Create(15, 20);
-	map.Draw();
+	maze.Create(startNode.m_PosX, startNode.m_PosY);
+	//map.Draw();
 
 	map.currentNode = &startNode;
 

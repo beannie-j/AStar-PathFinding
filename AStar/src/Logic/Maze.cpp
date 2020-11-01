@@ -23,20 +23,41 @@ void Maze::Create(int x, int y) // start at x, y
 	{
 		std::vector<Node> neighbours = GetNeighboursNonDiagonal(node);
 
+		std::cout << " Node: ";
+
+		node.Print();
+
+
+
+		std::cout << " Neighbours: -------------------------------------------\n";
+
+		for (const auto& node : neighbours)
+		{
+			node.Print();
+		}
+
+		std::cout << " --------------------------------------\n";
+
+
 		if (!neighbours.empty())
 		{
 			int randIdx = rand() % neighbours.size();
 			Node nextNode = neighbours[randIdx];
 
-			pathStack.push(nextNode);
-			visited.push_back(nextNode);
 
 			m_NumVisitedCells += 1;
+
+			pathStack.push(node);
+			visited.push_back(nextNode);
 			node = nextNode;
 		}
 		else // neighbour stack is empty, no where to go to, start backtracking.
 		{
+			std::cout << " --------------------------------------\n";
+			std::cout << "backtracking : ";
 			node = pathStack.top();
+			node.Print();
+
 			pathStack.pop();
 		}
 	}
@@ -45,8 +66,8 @@ void Maze::Create(int x, int y) // start at x, y
 	while (!pathStack.empty())
 	{
 		Node temp = pathStack.top();
-		temp.Print();
 		temp.m_Mark = 'M';
+		temp.Print();
 		map.Add(temp);
 		pathStack.pop();
 	}
@@ -59,6 +80,7 @@ void Maze::Create(int x, int y) // start at x, y
 std::vector<Node> Maze::GetNeighboursNonDiagonal(Node node)
 {
 	std::vector<Node> neighboursNonDiagonal;
+
 
 	auto& map = Map::Get();
 	Map::NodeGrid& grid = map.GetGrid();
@@ -89,10 +111,11 @@ std::vector<Node> Maze::GetNeighboursNonDiagonal(Node node)
 			&& checkY >= 0 && checkY < Map::GridHeight)
 			{
 				Node& candidate = grid[checkX + checkY * Map::GridWidth];
-				if (!candidate.m_IsObstacle && !Contains(m_Visited, candidate))
+				if (!Contains(m_Visited, candidate) && !candidate.m_IsObstacle)
 					neighboursNonDiagonal.push_back(candidate);
 			}
 	}
+
 	return neighboursNonDiagonal;
 }
 

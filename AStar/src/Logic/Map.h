@@ -5,8 +5,8 @@
 class Map
 {
 public:
-	static constexpr uint16_t GridWidth = 30;
-	static constexpr uint16_t GridHeight = 29;
+	static constexpr uint16_t GridWidth = 4;
+	static constexpr uint16_t GridHeight = 4;
 	static constexpr float NodeCellSize = 50.0f;
 
 	Node* currentNode = nullptr;
