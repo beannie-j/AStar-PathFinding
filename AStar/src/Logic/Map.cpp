@@ -3,6 +3,11 @@
 
 static Map* s_Instance = nullptr;
 
+int Map::Size()
+{
+	return GridWidth * GridHeight;
+}
+
 void Map::Init()
 {
 	// Create nodes

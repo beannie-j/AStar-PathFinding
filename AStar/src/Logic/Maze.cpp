@@ -1,49 +1,109 @@
 #include "Maze.h"
 #include "Map.h"
 
-#include <vector>
-
+#include <stack>
 #include <stdlib.h>
+#include <algorithm>
+#include <iostream>
 
-void Maze::Create(int x, int y)
+void Maze::Create(int x, int y) // start at x, y
 {
 	auto& map = Map::Get();
 	Map::NodeGrid& grid = map.GetGrid();
-	int VisitedCellsNum = 0;
 
-#if 0
+	auto& pathStack = m_PathStack;
+	auto& visited = m_Visited;
+
 	Node node = map.GetNode(x, y);
-	std::vector<Node> neighbours = node.GetNeighbours();
 
-	if (!neighbours.empty())
+	pathStack.push(node);
+	visited.push_back(node);
+
+	while (m_NumVisitedCells < map.Size())
 	{
-		int NextRandomCell = rand() % neighbours.size();
+		std::vector<Node> neighbours = GetNeighboursNonDiagonal(node);
 
-		if (!Contains(visited, neighbours.at(NextRandomCell)))
+		if (!neighbours.empty())
 		{
-			visited.push(node);
+			int randIdx = rand() % neighbours.size();
+			Node nextNode = neighbours[randIdx];
+
+			pathStack.push(nextNode);
+			visited.push_back(nextNode);
+
+			m_NumVisitedCells += 1;
+			node = nextNode;
+		}
+		else // neighbour stack is empty, no where to go to, start backtracking.
+		{
+			node = pathStack.top();
+			pathStack.pop();
 		}
 	}
+
 	
-	else 
+	while (!pathStack.empty())
 	{
-		// pick random neighbour.
+		Node temp = pathStack.top();
+		temp.Print();
+		temp.m_Mark = 'M';
+		map.Add(temp);
+		pathStack.pop();
 	}
-#endif
+
+	map.Draw();
+
 }
 
-bool Maze::Contains(std::stack<Node> stack, Node node)
+// only gets non diagonal neighbours and unvisited ones
+std::vector<Node> Maze::GetNeighboursNonDiagonal(Node node)
 {
-	while (!stack.empty() && stack.top() != node)
-	{
-		stack.pop();
-	}
+	std::vector<Node> neighboursNonDiagonal;
 
-	if (!stack.empty())
-	{
-		return true;
-	}
+	auto& map = Map::Get();
+	Map::NodeGrid& grid = map.GetGrid();
 
+	struct Direction
+	{
+		int X, Y;
+	};
+
+	constexpr Direction directions[4] =
+	{
+		// Non-diagonals
+		{ -1,  0 },
+		{  0,  1 },
+		{  1,  0 },
+		{  0, -1 },
+	};
+
+	for (int i = 0; i < 4; i++)
+	{
+		int nodeX = node.m_PosX;
+		int nodeY = node.m_PosY;
+
+		int checkX = nodeX + directions[i].X;
+		int checkY = nodeY + directions[i].Y;
+
+		if (checkX >= 0 && checkX < Map::GridWidth
+			&& checkY >= 0 && checkY < Map::GridHeight)
+			{
+				Node& candidate = grid[checkX + checkY * Map::GridWidth];
+				if (!candidate.m_IsObstacle && !Contains(m_Visited, candidate))
+					neighboursNonDiagonal.push_back(candidate);
+			}
+	}
+	return neighboursNonDiagonal;
+}
+
+bool Maze::Contains(std::vector<Node> vec, Node node)
+{
+	for (const Node& elem : vec)
+	{
+		if (elem == node)
+		{
+			return true;
+		}
+	}
 	return false;
 }
-

@@ -14,6 +14,7 @@ public:
 	using NodeGrid = Node[GridWidth * GridHeight];
 	NodeGrid grid;
 
+	int Size();
 	void Init();
 	void Draw();
 	void Add(const Node& node);

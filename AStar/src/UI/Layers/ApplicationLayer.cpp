@@ -1,6 +1,7 @@
 #include "ApplicationLayer.h"
 #include "Application.h"
 #include "Node.h"
+#include "Maze.h"
 
 #include <iostream>
 #include <vector>
@@ -12,6 +13,9 @@ void ApplicationLayer::OnInit()
 	map.Add(startNode);
 
 	map.Init();
+
+	Maze maze;
+	maze.Create(15, 20);
 	map.Draw();
 
 	map.currentNode = &startNode;

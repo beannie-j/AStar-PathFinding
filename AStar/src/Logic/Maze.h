@@ -1,18 +1,22 @@
 #pragma once
 
 #include <array>
+#include <optional>
 #include <stack>
+#include <vector>
 
 #include "Node.h"
 
 class Maze
 {
 private:
-	std::array<std::pair<int, int>, 4> dirs = { { {1,0}, {-1,0}, {0,1}, {0,-1} } };
-	std::stack<Node> visited;
+	std::stack<Node> m_PathStack;
+	std::vector<Node> m_Visited;
+	int m_NumVisitedCells = 1;
 
 public:
 	void Create(int x, int y);
-	bool Contains(std::stack<Node> vec, Node node);
+	std::vector<Node> GetNeighboursNonDiagonal(Node node);
+	bool Contains(std::vector<Node> vec, Node node);
 };
 

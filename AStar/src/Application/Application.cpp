@@ -39,6 +39,7 @@ void Application::Init()
 {
 	s_Window = new sf::RenderWindow(sf::VideoMode(Application::Width, Application::Height), "Path Finder");
 	s_Window->setKeyRepeatEnabled(false);
+	s_Window->setVerticalSyncEnabled(true);
 	ImGui::SFML::Init(*s_Window);
 	m_Running = true;
 }
