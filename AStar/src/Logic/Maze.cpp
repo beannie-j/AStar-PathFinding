@@ -115,8 +115,29 @@ std::vector<Node> Maze::GetNeighboursNonDiagonal(Node node)
 			&& checkY >= 0 && checkY < Map::GridHeight)
 			{
 				Node& candidate = grid[checkX + checkY * Map::GridWidth];
+
+				switch (i)
+				{
+				case 0:
+					candidate.dir = 0;
+					break;
+
+				case 1:
+					candidate.dir = 1;
+					break;
+				
+				case 2:
+					candidate.dir = 2;
+					break;
+
+				case 3:
+					candidate.dir = 3;
+					break;
+				}
+
 				if (!Contains(m_Visited, candidate) && !candidate.m_IsObstacle)
 					neighboursNonDiagonal.push_back(candidate);
+
 			}
 	}
 

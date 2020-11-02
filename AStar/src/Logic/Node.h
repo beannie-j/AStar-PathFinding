@@ -19,6 +19,8 @@ public:
 
 	char m_Mark;
 
+	int dir = 0;
+
 	Node* m_Parent = nullptr;
 	//std::vector<Node> m_Neighbours;
 
@@ -29,6 +31,8 @@ public:
 	Node(int posX, int posY, bool isObstacle, bool visited = false)
 		: m_PosX(posX), m_PosY(posY), m_IsObstacle(isObstacle), m_Visited(visited)
 	{}
+
+	int GetDir() { return dir; }
 
 	void CalculateFCost(int& fCost);
 	void CalculateGCost(Node startNode, int& gCost);

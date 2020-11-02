@@ -35,7 +35,8 @@ void ApplicationLayer::OnShutDown()
 {
 }
 
-static float s_PathTime = 0.02f;
+static float s_PathTime = 0.02f; // fast
+//static float s_PathTime = 1.6f; // slow
 static float s_PathTimer = s_PathTime;
 
 void ApplicationLayer::OnUpdate(Timestep ts)
@@ -192,6 +193,7 @@ void ApplicationLayer::DrawPath(sf::RenderWindow& window)
 	{
 		CarvePath(window, node);
 	}
+
 	if (!mazeVisited.empty())
 		DrawNode(window, mazeVisited.back(), sf::Color::Green);
 }
@@ -307,17 +309,43 @@ void ApplicationLayer::DrawNode(sf::RenderWindow& window, Node node, sf::Color c
 
 void ApplicationLayer::CarvePath(sf::RenderWindow& window, Node node)
 {
-	sf::RectangleShape cell(sf::Vector2f(Map::NodeCellSize, Map::NodeCellSize));
-	cell.setFillColor(sf::Color::White);
-	cell.setOutlineColor(sf::Color::White);
-	cell.setOutlineThickness(4);
+	sf::RectangleShape line(sf::Vector2f(45.f, 5));
+	line.setFillColor(sf::Color::White);
+	line.setOutlineColor(sf::Color::White);
+	line.setOutlineThickness(3);
 
 	float cx = (node.m_PosX * Map::NodeCellSize) + 10.f;
 	float cy = (node.m_PosY * Map::NodeCellSize) + 10.f;
+	
+	switch (node.GetDir())
+	{
+	case 0: // left
+		//line.setFillColor(sf::Color::Red);
+		cx += Map::NodeCellSize;
+		line.rotate(90);
+		break;
 
-	cell.setPosition(sf::Vector2f(cx, cy));
+	case 1: // Down
+		//line.setFillColor(sf::Color::Red);
+		line.rotate(0);
+		break;
 
-	window.draw(cell);
+	case 2: // Right
+		//line.setFillColor(sf::Color::Red);
+		line.rotate(90);
+		break;
+
+	case 3: // Up
+		//line.setFillColor(sf::Color::Red); 
+		line.rotate(0);
+		cy += Map::NodeCellSize;
+		break;
+	}
+	
+
+	line.setPosition(sf::Vector2f(cx, cy));
+
+	window.draw(line);
 }
 
 void ApplicationLayer::DrawObstacles(sf::RenderWindow& window)
