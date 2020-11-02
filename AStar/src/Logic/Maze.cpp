@@ -6,82 +6,86 @@
 #include <algorithm>
 #include <iostream>
 
-void Maze::Create(int x, int y) // start at x, y
+void Maze::BeginMaze(const Node& startNode)
+{	// empty 
+	m_Visited.clear();
+	while (!m_PathStack.empty()) { m_PathStack.pop(); }
+
+	m_StartNode = startNode;
+	m_Visited.push_back(m_StartNode);
+	//m_PathStack.push(m_StartNode);
+}
+
+bool Maze::NextStep()
 {
 	auto& map = Map::Get();
-	Map::NodeGrid& grid = map.GetGrid();
 
 	auto& pathStack = m_PathStack;
 	auto& visited = m_Visited;
 
-	Node node = map.GetNode(x, y);
-
-	pathStack.push(node);
-	visited.push_back(node);
-
-	while (m_NumVisitedCells < map.Size())
-	{
-		std::vector<Node> neighbours = GetNeighboursNonDiagonal(node);
-
-		std::cout << " Node: ";
-
-		node.Print();
-
-
-
-		std::cout << " Neighbours: -------------------------------------------\n";
-
-		for (const auto& node : neighbours)
-		{
-			node.Print();
-		}
-
-		std::cout << " --------------------------------------\n";
-
-
-		if (!neighbours.empty())
-		{
-			int randIdx = rand() % neighbours.size();
-			Node nextNode = neighbours[randIdx];
-
-
-			m_NumVisitedCells += 1;
-
-			pathStack.push(node);
-			visited.push_back(nextNode);
-			node = nextNode;
-		}
-		else // neighbour stack is empty, no where to go to, start backtracking.
-		{
-			std::cout << " --------------------------------------\n";
-			std::cout << "backtracking : ";
-			node = pathStack.top();
-			node.Print();
-
-			pathStack.pop();
-		}
-	}
-
+	Node node = visited.back();
 	
+	std::vector<Node> neighbours = GetNeighboursNonDiagonal(node);
+
+	//std::cout << " Node: ";
+	//node.Print();
+
+	//std::cout << " Neighbours: -------------------------------------------\n";
+	//for (const auto& node : neighbours) { node.Print(); }
+	//std::cout << " --------------------------------------\n";
+
+	if (!neighbours.empty())
+	{
+		int randIdx = rand() % neighbours.size();
+		Node nextNode = neighbours[randIdx];
+		m_NumVisitedCells += 1;
+		pathStack.push(node);
+		visited.push_back(nextNode);
+		//std::cout << "Moving to : "; 
+		//nextNode.Print();
+		//node = nextNode;
+	}
+	else // neighbour stack is empty, no where to go to, start backtracking.
+	{
+		//std::cout << " --------------------------------------\n";
+		//std::cout << "backtracking : ";
+		node = pathStack.top();
+		visited.push_back(node);
+		//node.Print();
+		pathStack.pop();
+	}
+	
+	if (m_NumVisitedCells >= map.Size())
+	{
+		pathStack.push(visited.back());
+		m_MazeGenerated = true;
+		return true;
+	}
+	
+	return false;
+}
+
+void Maze::EndMazeGenerating()
+{
+	auto& map = Map::Get();
+	auto& pathStack = m_PathStack;
+
 	while (!pathStack.empty())
 	{
 		Node temp = pathStack.top();
 		temp.m_Mark = 'M';
-		temp.Print();
+		//temp.Print();
 		map.Add(temp);
+		m_PathVector.push_back(temp);
 		pathStack.pop();
 	}
-
 	map.Draw();
-
 }
 
 // only gets non diagonal neighbours and unvisited ones
 std::vector<Node> Maze::GetNeighboursNonDiagonal(Node node)
 {
 	std::vector<Node> neighboursNonDiagonal;
-
-
 	auto& map = Map::Get();
 	Map::NodeGrid& grid = map.GetGrid();
 

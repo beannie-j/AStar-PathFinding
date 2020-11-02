@@ -5,17 +5,16 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
 
 void ApplicationLayer::OnInit()
 {
-	startNode = Node(1, 1, false);
+	startNode = Node(3, 1, false);
 	startNode.m_Mark = 'S';
 	map.Add(startNode);
 
 	map.Init();
 
-	Maze maze;
-	maze.Create(startNode.m_PosX, startNode.m_PosY);
 	//map.Draw();
 
 	map.currentNode = &startNode;
@@ -62,6 +61,28 @@ void ApplicationLayer::OnUpdate(Timestep ts)
 					// no path found
 				}
 				m_BeginPathFinding = false; 
+			}
+			s_PathTimer = s_PathTime;
+		}
+	}
+
+	if (m_BeginDrawMaze)
+	{
+		s_PathTimer -= ts;
+		if (s_PathTimer < 0.0f)
+		{
+			if (m_Maze.NextStep())
+			{
+				if (m_Maze.IsMazeGenerated())
+				{
+					// path found
+				}
+				else
+				{
+					// no path found
+				}
+				m_BeginDrawMaze = false;
+				m_Maze.EndMazeGenerating();
 			}
 			s_PathTimer = s_PathTime;
 		}
@@ -115,6 +136,12 @@ void ApplicationLayer::OnEvent(sf::Event& event)
 				}
 			}*/
 		}
+
+		if (event.key.code == sf::Keyboard::M)
+		{
+			m_Maze.BeginMaze(startNode);
+			m_BeginDrawMaze = true;
+		}
 	}
 
 
@@ -132,15 +159,9 @@ void ApplicationLayer::OnEvent(sf::Event& event)
 			DrawNode(window, obstacle, sf::Color(128, 128, 128));
 		}
 
-		if (startNodeBounds)
-		{
-			std::cout << "Start node\n";
-		}
-
-		if (endNodeBounds)
-		{
-			std::cout << "End node\n";
-		}
+		if (startNodeBounds) { std::cout << "Start node\n"; }
+		if (endNodeBounds) { std::cout << "End node\n"; }
+		
 	}
 }
 
@@ -149,6 +170,8 @@ void ApplicationLayer::DrawPath(sf::RenderWindow& window)
 	const auto& openSet = m_Path.GetOpenSet();
 	const auto& closedSet = m_Path.GetClosedSet();
 	const auto& pathSet = m_Path.GetPathSet();
+
+	const auto& mazeVisited = m_Maze.GetVisited();
 
 	for (const auto& node : openSet)
 	{
@@ -165,6 +188,12 @@ void ApplicationLayer::DrawPath(sf::RenderWindow& window)
 		DrawNode(window, node, sf::Color::Blue);
 	}
 
+	for (const auto& node : mazeVisited)
+	{
+		CarvePath(window, node);
+	}
+	if (!mazeVisited.empty())
+		DrawNode(window, mazeVisited.back(), sf::Color::Green);
 }
 
 void ApplicationLayer::Render(Timestep ts)
@@ -225,6 +254,8 @@ sf::Vector2i ApplicationLayer::GetMousePos(sf::RenderWindow& window)
 
 void ApplicationLayer::DrawGrid(sf::RenderWindow& window)
 {
+	sf::Font font;
+	font.loadFromFile("C:\\Windows\\Fonts\\Arial.ttf");
 	sf::RectangleShape cell(sf::Vector2f(Map::NodeCellSize, Map::NodeCellSize));
 	cell.setFillColor(sf::Color::White);
 	cell.setOutlineColor(sf::Color::Black);
@@ -237,6 +268,23 @@ void ApplicationLayer::DrawGrid(sf::RenderWindow& window)
 			float cx = (x * Map::NodeCellSize) + 10.f;
 			float cy = (y * Map::NodeCellSize) + 10.f;
 			cell.setPosition(sf::Vector2f(cx, cy));
+			
+			/*int s_cx = (int)cx;
+			int s_cy = (int)cy;
+
+			std::string str = std::to_string(s_cx) + "," + std::to_string(s_cy);
+			sf::Text text;
+			text.setString(str);
+			text.setFillColor(sf::Color::Black);
+			text.setPosition(cx, cy);
+			text.setCharacterSize(15);
+			text.setFont(font);
+			window.draw(text);
+			sf::RectangleShape wall(sf::Vector2f(Map::NodeCellSize / 3, Map::NodeCellSize));
+			wall.setFillColor(sf::Color::Red);
+			wall.setPosition(cx + Map::NodeCellSize, cy + Map::NodeCellSize);
+			window.draw(wall);
+			*/
 			window.draw(cell);
 		}
 	}
@@ -248,6 +296,21 @@ void ApplicationLayer::DrawNode(sf::RenderWindow& window, Node node, sf::Color c
 	cell.setFillColor(color);
 	cell.setOutlineColor(sf::Color::Black);
 	cell.setOutlineThickness(3);
+
+	float cx = (node.m_PosX * Map::NodeCellSize) + 10.f;
+	float cy = (node.m_PosY * Map::NodeCellSize) + 10.f;
+
+	cell.setPosition(sf::Vector2f(cx, cy));
+
+	window.draw(cell);
+}
+
+void ApplicationLayer::CarvePath(sf::RenderWindow& window, Node node)
+{
+	sf::RectangleShape cell(sf::Vector2f(Map::NodeCellSize, Map::NodeCellSize));
+	cell.setFillColor(sf::Color::White);
+	cell.setOutlineColor(sf::Color::White);
+	cell.setOutlineThickness(4);
 
 	float cx = (node.m_PosX * Map::NodeCellSize) + 10.f;
 	float cy = (node.m_PosY * Map::NodeCellSize) + 10.f;

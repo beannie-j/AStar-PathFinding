@@ -3,6 +3,7 @@
 #include "PathFinding.h"
 #include "Map.h" 
 #include "Timestep.h"
+#include "Maze.h"
 
 #include <SFML/Graphics.hpp>
 #include <queue>
@@ -36,9 +37,11 @@ private:
 	sf::Sprite Sprite_Arrow;
 
 	Path m_Path;
+	Maze m_Maze;
 
 	float m_LastFrameTime = 0.0f;
 	bool m_BeginPathFinding = false; 
+	bool m_BeginDrawMaze = false;
 
 	struct TimedFunction
 	{
@@ -58,6 +61,7 @@ private:
 	sf::Vector2i GetMousePos(sf::RenderWindow& window);
 	void DrawGrid(sf::RenderWindow& window);
 	void DrawNode(sf::RenderWindow& window, Node node, sf::Color color);
+	void CarvePath(sf::RenderWindow& window, Node node);
 	void DrawObstacles(sf::RenderWindow& window);
 	void DrawPathNodes(sf::RenderWindow& window);
 	void DrawVisitedNodes(sf::RenderWindow& window);
