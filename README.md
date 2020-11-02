@@ -71,7 +71,7 @@ This is a visualiser that implements the A* Path Finding algorithm. Let's find t
 
 
 Maze Generation
-![](https://gyazo.com/78d91696b1c261d79211b29f83b61fdf)
+![](https://gyazo.com/78d91696b1c261d79211b29f83b61fdf.gif)
 
 <!-- 
 <a href="https://gyazo.com/ef6e5ed429343cf3999e1669322c61c5"><img src="https://i.gyazo.com/ef6e5ed429343cf3999e1669322c61c5.gif" alt="Image from Gyazo" width="1800"/></a>
