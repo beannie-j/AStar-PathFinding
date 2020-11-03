@@ -270,23 +270,6 @@ void ApplicationLayer::DrawGrid(sf::RenderWindow& window)
 			float cx = (x * Map::NodeCellSize) + 10.f;
 			float cy = (y * Map::NodeCellSize) + 10.f;
 			cell.setPosition(sf::Vector2f(cx, cy));
-			
-			/*int s_cx = (int)cx;
-			int s_cy = (int)cy;
-
-			std::string str = std::to_string(s_cx) + "," + std::to_string(s_cy);
-			sf::Text text;
-			text.setString(str);
-			text.setFillColor(sf::Color::Black);
-			text.setPosition(cx, cy);
-			text.setCharacterSize(15);
-			text.setFont(font);
-			window.draw(text);
-			sf::RectangleShape wall(sf::Vector2f(Map::NodeCellSize / 3, Map::NodeCellSize));
-			wall.setFillColor(sf::Color::Red);
-			wall.setPosition(cx + Map::NodeCellSize, cy + Map::NodeCellSize);
-			window.draw(wall);
-			*/
 			window.draw(cell);
 		}
 	}
@@ -342,7 +325,6 @@ void ApplicationLayer::CarvePath(sf::RenderWindow& window, Node node)
 		break;
 	}
 	
-
 	line.setPosition(sf::Vector2f(cx, cy));
 
 	window.draw(line);

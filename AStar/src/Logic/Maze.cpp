@@ -27,13 +27,7 @@ bool Maze::NextStep()
 	
 	std::vector<Node> neighbours = GetNeighboursNonDiagonal(node);
 
-	//std::cout << " Node: ";
-	//node.Print();
-
-	//std::cout << " Neighbours: -------------------------------------------\n";
-	//for (const auto& node : neighbours) { node.Print(); }
-	//std::cout << " --------------------------------------\n";
-
+	// check for possible neighbours it can visit to and picks next node to go to.
 	if (!neighbours.empty())
 	{
 		int randIdx = rand() % neighbours.size();
@@ -43,15 +37,11 @@ bool Maze::NextStep()
 		visited.push_back(nextNode);
 		//std::cout << "Moving to : "; 
 		//nextNode.Print();
-		//node = nextNode;
 	}
 	else // neighbour stack is empty, no where to go to, start backtracking.
 	{
-		//std::cout << " --------------------------------------\n";
-		//std::cout << "backtracking : ";
 		node = pathStack.top();
 		visited.push_back(node);
-		//node.Print();
 		pathStack.pop();
 	}
 	
@@ -100,7 +90,7 @@ std::vector<Node> Maze::GetNeighboursNonDiagonal(Node node)
 		{ -1,  0 },
 		{  0,  1 },
 		{  1,  0 },
-		{  0, -1 },
+		{  0, -1 }
 	};
 
 	for (int i = 0; i < 4; i++)
