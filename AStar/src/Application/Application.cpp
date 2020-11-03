@@ -4,6 +4,8 @@
 #include <imgui.h>
 #include <imgui-SFML.h>
 
+#include "ImGuiLayer.h"
+
 
 #include <iostream>
 
@@ -40,13 +42,15 @@ void Application::Init()
 	s_Window = new sf::RenderWindow(sf::VideoMode(Application::Width, Application::Height), "Path Finder");
 	s_Window->setKeyRepeatEnabled(false);
 	s_Window->setVerticalSyncEnabled(true);
-	ImGui::SFML::Init(*s_Window);
+	s_ImGuiWindow = new ImGuiLayer();
+	s_ImGuiWindow->OnInit();
 	m_Running = true;
 }
 
 void Application::Render()
 {
 	sf::Clock deltaClock;
+
 	while (m_Running)
 	{
 		float time = clock.getElapsedTime().asSeconds();
@@ -57,7 +61,8 @@ void Application::Render()
 	
 		while (s_Window->pollEvent(event))
 		{
-			ImGui::SFML::ProcessEvent(event);
+			s_ImGuiWindow->OnEvent(event);
+
 			if (event.type == sf::Event::Closed)
 			{
 				s_Window->close();
@@ -66,16 +71,13 @@ void Application::Render()
 			s_CurrentLayer->OnEvent(event);
 		}
 
-		ImGui::SFML::Update(*s_Window, deltaClock.restart());
-
-		ImGui::Begin("Hello, world!");
-		ImGui::Button("Look at this pretty button");
-		ImGui::End();
+		s_ImGuiWindow->OnUpdate(deltaClock);
 
 		s_Window->clear(sf::Color::Black);
 		s_CurrentLayer->OnUpdate(timestep);
-
-		ImGui::SFML::Render(*s_Window);
+		
+		s_ImGuiWindow->Render();
+		
 		s_Window->display();
 	}
 } 

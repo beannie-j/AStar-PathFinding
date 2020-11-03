@@ -113,8 +113,8 @@ void ApplicationLayer::OnEvent(sf::Event& event)
 	auto& app = Application::Get();
 	auto& window = app.GetWindow();
 
-	int x = (GetMousePos(window).x - 10) / Map::NodeCellSize;
-	int y = (GetMousePos(window).y - 10) / Map::NodeCellSize;
+	int x = (int) (GetMousePos(window).x - 10) / Map::NodeCellSize;
+	int y = (int) (GetMousePos(window).y - 10) / Map::NodeCellSize;
 
 	bool startNodeBounds = (x == startNode.m_PosX && y == startNode.m_PosY);
 	bool endNodeBounds = (x == endNode.m_PosX && y == endNode.m_PosY);

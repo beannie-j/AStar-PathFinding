@@ -4,7 +4,9 @@
 #include "Map.h"
 #include "Layer.h"
 #include "Timestep.h"
-#include "imgui.h"
+#include "ImGuiLayer.h"
+
+#include <imgui.h>
 
 struct Grid
 {
@@ -28,12 +30,13 @@ public:
 	inline static constexpr uint32_t Width = 1500;
 	inline static constexpr uint32_t Height = 1500;
 
-
 	Application();
 	~Application();
 
 	sf::RenderWindow* s_Window = nullptr;
 	Layer* s_CurrentLayer = nullptr;
+
+	ImGuiLayer* s_ImGuiWindow = nullptr;
 
 	static Application& Get();
 	sf::RenderWindow& GetWindow();
