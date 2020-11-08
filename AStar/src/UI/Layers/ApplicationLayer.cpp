@@ -6,10 +6,11 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <algorithm>
 
 void ApplicationLayer::OnInit()
 {
-	startNode = Node(3, 1, false);
+	startNode = Node(3, 1, false, false);
 	startNode.m_Mark = 'S';
 	map.Add(startNode);
 
@@ -35,9 +36,32 @@ void ApplicationLayer::OnShutDown()
 {
 }
 
-static float s_PathTime = 0.02f; // fast
-//static float s_PathTime = 1.6f; // slow
+static float s_PathTime = 0.01f; 
 static float s_PathTimer = s_PathTime;
+
+
+struct PathData
+{
+	int NodeX = 0, NodeY = 0;
+	int Dir = 0;
+};
+
+static PathData s_LastPathNode;
+
+static std::vector<std::pair<int, int>> s_PathCoords;
+
+static void TryPlaceWall(Map& map, int x, int y)
+{
+	auto& it = std::find_if(s_PathCoords.begin(), s_PathCoords.end(), [x, y](auto& pair) { return std::get<0>(pair) == x && std::get<1>(pair) == y; });
+	if (it == s_PathCoords.end()) // not found
+	{
+		//map.Add(Node(x, y, false, true)); // changed to Wall Node
+		Node node(x, y, true, false);
+		node.m_Mark = 'W';
+		map.Add(node);
+	}
+		
+}
 
 void ApplicationLayer::OnUpdate(Timestep ts)
 {
@@ -74,6 +98,7 @@ void ApplicationLayer::OnUpdate(Timestep ts)
 		{
 			if (m_Maze.NextStep())
 			{
+				
 				if (m_Maze.IsMazeGenerated())
 				{
 					// path found
@@ -85,17 +110,44 @@ void ApplicationLayer::OnUpdate(Timestep ts)
 				m_BeginDrawMaze = false;
 				m_Maze.EndMazeGenerating();
 			}
+			else
+			{
+				auto& node = m_Maze.GetLastVisited();
+
+				if (s_LastPathNode.NodeX)
+				{
+					switch (s_LastPathNode.Dir)
+					{
+					case 0: // left
+					case 2: // Right
+						TryPlaceWall(map, s_LastPathNode.NodeX, s_LastPathNode.NodeY + 1);
+						TryPlaceWall(map, s_LastPathNode.NodeX, s_LastPathNode.NodeY - 1);
+						break;
+					case 1: // Down
+					case 3: // Up
+						TryPlaceWall(map, s_LastPathNode.NodeX + 1, s_LastPathNode.NodeY);
+						TryPlaceWall(map, s_LastPathNode.NodeX - 1, s_LastPathNode.NodeY);
+						break;
+					}
+
+					map.Add(Node(s_LastPathNode.NodeX, s_LastPathNode.NodeY, false, false));
+				}
+
+				s_PathCoords.emplace_back(node.m_PosX, node.m_PosY);
+
+				s_LastPathNode.NodeX = node.m_PosX;
+				s_LastPathNode.NodeY = node.m_PosY;
+				s_LastPathNode.Dir = node.GetDir();
+
+			}
 			s_PathTimer = s_PathTime;
 		}
 	}
 
-	// Process timed functions
-	//std::cout << "Delta time: {0}s {1}ms " << ts.GetSeconds() << " " << ts.GetMilliseconds() << std::endl;
 	for (auto it = m_TimedFunctionQueue.begin(); it != m_TimedFunctionQueue.end(); )
 	{
 		auto& tf = *it;
 		tf.Time -= ts.GetSeconds();
-		//std::cout << tf.Time << std::endl;
 		if (tf.Time <= 0.0f)
 		{
 			tf.Function();
@@ -150,11 +202,10 @@ void ApplicationLayer::OnEvent(sf::Event& event)
 	{
 		int x = (GetMousePos(window).x - 10) / Map::NodeCellSize;
 		int y = (GetMousePos(window).y - 10) / Map::NodeCellSize;
-		//std::cout << "x " << x << "y " << y << std::endl;
 
 		if (!startNodeBounds && !endNodeBounds)
 		{
-			Node obstacle(x, y, true);
+			Node obstacle(x, y, true, false);
 			obstacle.m_Mark = 'X';
 			map.Add(obstacle);
 			DrawNode(window, obstacle, sf::Color(128, 128, 128));
@@ -191,7 +242,7 @@ void ApplicationLayer::DrawPath(sf::RenderWindow& window)
 
 	for (const auto& node : mazeVisited)
 	{
-		CarvePath(window, node);
+		//CarvePath(window, node);
 	}
 
 	if (!mazeVisited.empty())
@@ -218,6 +269,7 @@ void ApplicationLayer::Render(Timestep ts)
 	window.draw(Sprite_LocationPin);
 
 	DrawObstacles(window);
+	DrawWalls(window);
 	//DrawVisitedNodes(window);
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Middle))
@@ -231,7 +283,7 @@ void ApplicationLayer::Render(Timestep ts)
 		map.ResetPath();
 		int x = (GetMousePos(window).x - 10) / Map::NodeCellSize;
 		int y = (GetMousePos(window).y - 10) / Map::NodeCellSize;
-		endNode = Node(x, y, false);
+		endNode = Node(x, y, false, false);
 		endNode.m_Mark = 'E';
 		map.Add(endNode);
 		
@@ -290,6 +342,7 @@ void ApplicationLayer::DrawNode(sf::RenderWindow& window, Node node, sf::Color c
 	window.draw(cell);
 }
 
+
 void ApplicationLayer::CarvePath(sf::RenderWindow& window, Node node)
 {
 	sf::RectangleShape line(sf::Vector2f(45.f, 5));
@@ -324,10 +377,29 @@ void ApplicationLayer::CarvePath(sf::RenderWindow& window, Node node)
 		cy += Map::NodeCellSize;
 		break;
 	}
-	
+
+	// map.Add(Node(node.m_PosX + ox, node.m_PosY + oy, true));
+	// map.Add(Node(node.m_PosX + ox * -1, node.m_PosY + oy * -1, true));
+	// map.Add(Node(node.m_PosX, node.m_PosY, false));
+
 	line.setPosition(sf::Vector2f(cx, cy));
 
 	window.draw(line);
+
+	
+}
+
+void ApplicationLayer::DrawWalls(sf::RenderWindow& window)
+{
+	std::vector<Node> walls = map.GetWalls();
+
+	for (const Node& wall : walls)
+	{
+		DrawNode(window, wall, sf::Color::Black);
+
+		float cx = (wall.m_PosX * Map::NodeCellSize) + 10.f;
+		float cy = (wall.m_PosY * Map::NodeCellSize) + 10.f;
+	}
 }
 
 void ApplicationLayer::DrawObstacles(sf::RenderWindow& window)
@@ -336,7 +408,8 @@ void ApplicationLayer::DrawObstacles(sf::RenderWindow& window)
 
 	for (const Node& obstacle : obstacles)
 	{
-		DrawNode(window, obstacle, sf::Color(128, 128, 128));
+		//DrawNode(window, obstacle, sf::Color(128, 128, 128));
+		DrawNode(window, obstacle, sf::Color::Black);
 
 		float cx = (obstacle.m_PosX * Map::NodeCellSize) + 10.f;
 		float cy = (obstacle.m_PosY * Map::NodeCellSize) + 10.f;
@@ -349,7 +422,6 @@ void ApplicationLayer::DrawPathNodes(sf::RenderWindow& window)
 
 	for (const Node& pathNode : pathNodes)
 	{
-		//m_TimedFunctionQueue.push_back({ 2.0f, [&]() { DrawNode(window, pathNode, sf::Color(135, 206, 235)); } });
 		DrawNode(window, pathNode, sf::Color(135, 206, 235));
 	}
 }
@@ -360,7 +432,6 @@ void ApplicationLayer::DrawVisitedNodes(sf::RenderWindow& window)
 
 	for (const Node& v : visitedNodes)
 	{
-		//m_TimedFunctionQueue.push_back({ 2.0f, [&]() { DrawNode(window, v, sf::Color(255, 177, 88)); } });
 		DrawNode(window, v, sf::Color(255, 177, 88));
 	}
 }

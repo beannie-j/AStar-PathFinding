@@ -24,6 +24,7 @@ public:
 
 	std::vector<Node> GetNeighboursNonDiagonal(Node node);
 	bool Contains(std::vector<Node> vec, Node node);
+	Node& GetLastVisited() { return m_Visited.back(); }
 
 	bool IsMazeGenerated() const { return m_MazeGenerated; }
 

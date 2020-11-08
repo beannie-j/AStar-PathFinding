@@ -15,7 +15,7 @@ void Map::Init()
 	{
 		for (int y = 0; y < GridHeight; y++)
 		{
-			Add(Node(x, y, false));
+			Add(Node(x, y, false, false));
 		}
 	}
 }
@@ -40,7 +40,14 @@ void Map::Add(const Node& node)
 {
 	int x = node.m_PosX;
 	int y = node.m_PosY;
-	grid[x + y * GridWidth] = node;
+	if (x < 0 || x >= GridWidth || y < 0 || y >= GridHeight)
+	{
+		std::cout << "Out of bounds!\n";
+	}
+	else
+	{
+		grid[x + y * GridWidth] = node;
+	}
 }
 
 Map& Map::Get()
@@ -107,6 +114,23 @@ std::vector<Node> Map::GetVisitedNodes()
 		}
 	}
 	return VisitedNodes;
+}
+
+std::vector<Node> Map::GetWalls()
+{
+	std::vector<Node> walls;
+
+	for (int y = 0; y < GridHeight; y++)
+	{
+		for (int x = 0; x < GridWidth; x++)
+		{
+			if (grid[x + y * GridWidth].m_Mark == 'W')
+			{
+				walls.push_back(GetNode(x, y));
+			}
+		}
+	}
+	return walls;
 }
 
 void Map::ResetPath()

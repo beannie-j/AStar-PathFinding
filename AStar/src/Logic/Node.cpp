@@ -52,12 +52,13 @@ std::array<std::optional<Node>, 8> Node::GetNeighbours()
 		{  0,  1 },
 		{  1,  0 },
 		{  0, -1 },
-
+		
 		// Diagonals
 		{ -1,  1 },
 		{  1,  1 },
 		{  1, -1 },
 		{ -1, -1 }
+		
 	};
 
 	for (int i = 0; i < 8; i++)

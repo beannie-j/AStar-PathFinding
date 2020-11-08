@@ -70,7 +70,7 @@ bool Path::NextStep()
 			neighbour.m_GCost = newCostToNeighbour;
 			neighbour.m_HCost = CalculateHCost(neighbour, m_EndNode);
 			CalculateFCost(neighbour);
-			neighbour.m_Parent = new Node(currentNode.m_PosX, currentNode.m_PosY, false);
+			neighbour.m_Parent = new Node(currentNode.m_PosX, currentNode.m_PosY, false, false);
 
 			if (!Contains(openSet, neighbour))
 			{
@@ -235,7 +235,7 @@ PathFindingResult PathFinding::FindPath(const Node& startNode, const Node& endNo
 				neighbour.m_GCost = newCostToNeighbour;
 				neighbour.m_HCost = CalculateHCost(neighbour, endNode);
 				CalculateFCost(neighbour);
-				neighbour.m_Parent = new Node(currentNode.m_PosX, currentNode.m_PosY, false);
+				neighbour.m_Parent = new Node(currentNode.m_PosX, currentNode.m_PosY, false, false);
 
 				if (!Contains(openSet, neighbour))
 				{

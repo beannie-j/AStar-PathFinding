@@ -13,7 +13,6 @@ void Maze::BeginMaze(const Node& startNode)
 
 	m_StartNode = startNode;
 	m_Visited.push_back(m_StartNode);
-	//m_PathStack.push(m_StartNode);
 }
 
 bool Maze::NextStep()
@@ -30,6 +29,7 @@ bool Maze::NextStep()
 	// check for possible neighbours it can visit to and picks next node to go to.
 	if (!neighbours.empty())
 	{
+		std::cout << "Proceeding to random nodes\n";
 		int randIdx = rand() % neighbours.size();
 		Node nextNode = neighbours[randIdx];
 		m_NumVisitedCells += 1;
@@ -40,6 +40,10 @@ bool Maze::NextStep()
 	}
 	else // neighbour stack is empty, no where to go to, start backtracking.
 	{
+		std::cout << "[backtracking]: ";
+		std::cout << "m_NumVisitedCells : " << m_NumVisitedCells << " map size :" << map.Size() << std::endl;
+		std::cout << "size : "  << pathStack.size() << std::endl;
+		if (pathStack.size() <= 0) return true;
 		node = pathStack.top();
 		visited.push_back(node);
 		pathStack.pop();
@@ -51,7 +55,6 @@ bool Maze::NextStep()
 		m_MazeGenerated = true;
 		return true;
 	}
-	
 	return false;
 }
 
@@ -127,7 +130,6 @@ std::vector<Node> Maze::GetNeighboursNonDiagonal(Node node)
 
 				if (!Contains(m_Visited, candidate) && !candidate.m_IsObstacle)
 					neighboursNonDiagonal.push_back(candidate);
-
 			}
 	}
 

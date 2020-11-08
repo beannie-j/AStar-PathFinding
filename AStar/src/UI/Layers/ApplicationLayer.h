@@ -51,10 +51,6 @@ private:
 
 	std::vector<TimedFunction> m_TimedFunctionQueue;
 
-	/*
-	m_TimedFunctionQueue.push_back({ 1.0f, [&]() { DrawNode(window, v, sf::Color(255, 177, 88)); } });
-	*/
-
 	void Render(Timestep ts);
 	void Update(Timestep ts);
 
@@ -65,6 +61,8 @@ private:
 	void DrawObstacles(sf::RenderWindow& window);
 	void DrawPathNodes(sf::RenderWindow& window);
 	void DrawVisitedNodes(sf::RenderWindow& window);
+	void DrawWalls(sf::RenderWindow& window);
+
 
 	void DrawPath(sf::RenderWindow& window);
 

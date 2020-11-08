@@ -27,6 +27,7 @@ public:
 	std::vector<Node> GetObstacles();
 	std::vector<Node> GetPathNodes();
 	std::vector<Node> GetVisitedNodes();
+	std::vector<Node> GetWalls();
 
 	void ResetPath();
 

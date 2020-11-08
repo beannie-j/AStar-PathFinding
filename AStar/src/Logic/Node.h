@@ -9,6 +9,7 @@ class Node
 public:
 	bool m_IsObstacle;
 	bool m_Visited;
+	bool m_IsWall;
 	// Vector3 
 	int m_PosX;
 	int m_PosY;
@@ -28,8 +29,8 @@ public:
 	// if same FCost - check the nodes with lowest H cost (which one is closest to the end node)
 	// if F cost keeps increasing, it means you are not going through a straight path, it will start exploring other paths
 
-	Node(int posX, int posY, bool isObstacle, bool visited = false)
-		: m_PosX(posX), m_PosY(posY), m_IsObstacle(isObstacle), m_Visited(visited)
+	Node(int posX, int posY, bool isObstacle, bool isWall, bool visited = false)
+		: m_PosX(posX), m_PosY(posY), m_IsObstacle(isObstacle), m_IsWall(isWall), m_Visited(visited)
 	{}
 
 	int GetDir() { return dir; }
