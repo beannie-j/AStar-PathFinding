@@ -29,6 +29,8 @@ public:
 	std::vector<Node> GetVisitedNodes();
 	std::vector<Node> GetWalls();
 
+
+	void ResetObstacles();
 	void ResetPath();
 
 	Map();

@@ -133,13 +133,27 @@ std::vector<Node> Map::GetWalls()
 	return walls;
 }
 
+void Map::ResetObstacles()
+{
+	for (int y = 0; y < GridHeight; y++)
+	{
+		for (int x = 0; x < GridWidth; x++)
+		{
+			if (grid[x + y * GridWidth].m_IsObstacle)
+			{
+				grid[x + y * GridWidth].m_IsObstacle = false;
+			}
+		}
+	}
+}
+
 void Map::ResetPath()
 {
 	for (int y = 0; y < GridHeight; y++)
 	{
 		for (int x = 0; x < GridWidth; x++)
 		{
-			if (grid[x + y * GridWidth].m_Mark == 'P' || grid[x + y * GridWidth].m_Mark == 'E' || grid[x + y * GridWidth].m_Mark == 'V')
+			if (grid[x + y * GridWidth].m_Mark == 'P' || grid[x + y * GridWidth].m_Mark == 'E' || grid[x + y * GridWidth].m_Mark == 'V' || grid[x + y * GridWidth].m_Mark == 'X')
 			{
 				grid[x + y * GridWidth].m_Mark = '.';
 			}

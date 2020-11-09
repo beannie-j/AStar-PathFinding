@@ -36,7 +36,7 @@ std::array<std::optional<Node>, 8> Node::GetNeighbours()
 	std::array<std::optional<Node>, 8> neighbours;
 
 	auto& map = Map::Get();
-	Map::NodeGrid& grid = map.GetGrid(); // why this is not working?
+	Map::NodeGrid& grid = map.GetGrid();
 
 	// instead of only adding valid nodes, 
 

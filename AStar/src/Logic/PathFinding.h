@@ -19,6 +19,8 @@ public:
 
 	bool IsPathFound() const { return m_PathFound; }
 
+	void ClearAllSet();
+
 	const std::vector<Node>& GetOpenSet() const { return m_OpenSet; }
 	const std::vector<Node>& GetClosedSet() const { return m_ClosedSet; }
 	const std::vector<Node>& GetPathSet() const { return m_PathSet; }

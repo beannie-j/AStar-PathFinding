@@ -8,6 +8,9 @@
 
 void Maze::BeginMaze(const Node& startNode)
 {	// empty 
+	auto& map = Map::Get();
+	map.ResetPath();
+
 	m_Visited.clear();
 	while (!m_PathStack.empty()) { m_PathStack.pop(); }
 

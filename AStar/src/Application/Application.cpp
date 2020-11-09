@@ -3,6 +3,8 @@
 
 #include <imgui.h>
 #include <imgui-SFML.h>
+#include <SFML/Window.hpp>
+#include <SFML/System.hpp>
 
 #include "ImGuiLayer.h"
 
@@ -75,6 +77,8 @@ void Application::Render()
 
 		s_Window->clear(sf::Color::Black);
 		s_CurrentLayer->OnUpdate(timestep);
+		s_CurrentLayer->OnButtonPressedEvent(timestep);
+		s_CurrentLayer->OnKeyPressedEvent(timestep);
 		
 		s_ImGuiWindow->Render();
 		

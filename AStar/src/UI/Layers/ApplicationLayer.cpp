@@ -16,9 +16,13 @@ void ApplicationLayer::OnInit()
 
 	map.Init();
 
-	//map.Draw();
-
 	map.currentNode = &startNode;
+
+	map.ResetPath();
+	endNode.m_Mark = 'E';
+	map.Add(endNode);
+
+	map.Draw();
 
 	Texture_LocationPin.loadFromFile("Assets/location.png");
 	Sprite_LocationPin.setTexture(Texture_LocationPin);
@@ -109,6 +113,10 @@ void ApplicationLayer::OnUpdate(Timestep ts)
 				}
 				m_BeginDrawMaze = false;
 				m_Maze.EndMazeGenerating();
+				startNode.m_Mark = 'S';
+				map.Add(startNode);
+				endNode.m_Mark = 'E';
+				map.Add(endNode);
 			}
 			else
 			{
@@ -160,61 +168,118 @@ void ApplicationLayer::OnUpdate(Timestep ts)
 	}
 }
 
+static bool dragging = false;
+static bool movingStartNode = false;
+static bool movingEndNode = false;
+
 void ApplicationLayer::OnEvent(sf::Event& event)
 {
 	auto& app = Application::Get();
 	auto& window = app.GetWindow();
 
-	int x = (int) (GetMousePos(window).x - 10) / Map::NodeCellSize;
-	int y = (int) (GetMousePos(window).y - 10) / Map::NodeCellSize;
+	int mousePosX = (int)(GetMousePos(window).x - 10) / Map::NodeCellSize;
+	int mousePosY = (int)(GetMousePos(window).y - 10) / Map::NodeCellSize;
 
-	bool startNodeBounds = (x == startNode.m_PosX && y == startNode.m_PosY);
-	bool endNodeBounds = (x == endNode.m_PosX && y == endNode.m_PosY);
+	bool startNodeBounds = (mousePosX == startNode.m_PosX && mousePosY == startNode.m_PosY);
+	bool endNodeBounds = (mousePosX == endNode.m_PosX && mousePosY == endNode.m_PosY);
 
-	if (event.type == sf::Event::KeyPressed)
+	if (event.mouseButton.button == sf::Mouse::Left && event.type == sf::Event::MouseButtonPressed && startNodeBounds)
 	{
-		if (event.key.code == sf::Keyboard::Space)
-		{
-			m_BeginPathFinding = true;
-
-			/*
-			if (m_Path.NextStep())
-			{
-				if (m_Path.IsPathFound())
-				{
-				}
-				else
-				{
-					// no path found
-				}
-			}*/
-		}
-
-		if (event.key.code == sf::Keyboard::M)
-		{
-			m_Maze.BeginMaze(startNode);
-			m_BeginDrawMaze = true;
-		}
+		dragging = true;
+		movingStartNode = true;
 	}
 
-
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	if (event.mouseButton.button == sf::Mouse::Left && event.type == sf::Event::MouseButtonPressed && endNodeBounds)
 	{
-		int x = (GetMousePos(window).x - 10) / Map::NodeCellSize;
-		int y = (GetMousePos(window).y - 10) / Map::NodeCellSize;
+		dragging = true;
+		movingEndNode = true;
+	}
 
-		if (!startNodeBounds && !endNodeBounds)
+	if (movingStartNode)
+	{
+		std::cout << "dragging start node\n";
+		std::cout << mousePosX << " , " << mousePosY << std::endl;
+		DrawNodeMarker(window, mousePosX, mousePosY, true);
+	}
+
+	if (movingEndNode)
+	{
+		std::cout << "dragging End node\n";
+		std::cout << mousePosX << " , " << mousePosY << std::endl;
+	}
+
+	if (event.mouseButton.button == sf::Mouse::Left && event.type == sf::Event::MouseButtonReleased && dragging)
+	{
+		if (movingStartNode)
 		{
-			Node obstacle(x, y, true, false);
-			obstacle.m_Mark = 'X';
-			map.Add(obstacle);
-			DrawNode(window, obstacle, sf::Color(128, 128, 128));
+			startNode.m_PosX = mousePosX;
+			startNode.m_PosY = mousePosY;
+
+			map.ResetPath();
+			startNode.m_Mark = 'S';
+			map.Add(startNode);
+
+			map.Draw();
+
+			m_Path.BeginPathFinding(startNode, endNode);
+
+			movingStartNode = false;
 		}
 
-		if (startNodeBounds) { std::cout << "Start node\n"; }
-		if (endNodeBounds) { std::cout << "End node\n"; }
-		
+		if (movingEndNode)
+		{
+			endNode.m_PosX = mousePosX;
+			endNode.m_PosY = mousePosY;
+
+			map.ResetPath();
+			endNode.m_Mark = 'E';
+			map.Add(endNode);
+
+			map.Draw();
+
+			m_Path.BeginPathFinding(startNode, endNode);
+			movingEndNode = false;
+		}
+		dragging = false;
 	}
+
+	DrawObstaclesByMouseInput(movingStartNode, movingEndNode);
+}
+
+void ApplicationLayer::OnButtonPressedEvent(Timestep ts)
+{
+	auto& app = Application::Get();
+	auto& window = app.GetWindow();
+	auto& imGuiWindow = app.GetImGuiWindow();
+
+	if (imGuiWindow.isDrawMazeButtonPressed())
+	{
+		map.ResetPath();
+		map.ResetObstacles();
+		m_Path.ClearAllSet();
+		m_Maze.BeginMaze(startNode);
+		m_BeginDrawMaze = true;
+	}
+
+	if (imGuiWindow.isFindPathButtonPressed())
+	{
+		m_Path.BeginPathFinding(startNode, endNode);
+		m_BeginPathFinding = true;
+	}
+
+	if (imGuiWindow.isClearMapButtonPressed())
+	{
+		map.ResetPath();
+		map.ResetObstacles();
+		startNode.m_Mark = 'S';
+		map.Add(startNode);
+		endNode.m_Mark = 'E';
+		map.Add(endNode);
+	}
+}
+
+void ApplicationLayer::OnKeyPressedEvent(Timestep ts)
+{
 }
 
 void ApplicationLayer::DrawPath(sf::RenderWindow& window)
@@ -254,8 +319,6 @@ void ApplicationLayer::Render(Timestep ts)
 	auto& app = Application::Get();
 	auto& window = app.GetWindow();
 
-	PathFindingResult result;
-
 	DrawGrid(window);
 
 	DrawNode(window, startNode, sf::Color::Red);
@@ -269,41 +332,45 @@ void ApplicationLayer::Render(Timestep ts)
 	window.draw(Sprite_LocationPin);
 
 	DrawObstacles(window);
-	DrawWalls(window);
-	//DrawVisitedNodes(window);
-
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Middle))
-	{
-		std::cout << " Middle pressed" << std::endl;
-		m_TimedFunctionQueue.push_back({ 2.0f, [&]() { std::cout << "Hello!\n"; } });
-	}
-
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
-	{
-		map.ResetPath();
-		int x = (GetMousePos(window).x - 10) / Map::NodeCellSize;
-		int y = (GetMousePos(window).y - 10) / Map::NodeCellSize;
-		endNode = Node(x, y, false, false);
-		endNode.m_Mark = 'E';
-		map.Add(endNode);
-		
-		p.FindPath(startNode, endNode);
-		map.Draw();
-
-		m_Path.BeginPathFinding(startNode, endNode);
-	}
-
 }
 
 void ApplicationLayer::Update(Timestep ts)
 {
 	auto& app = Application::Get();
 	auto& window = app.GetWindow();
+	auto& imGuiWindow = app.GetImGuiWindow();
+
 }
 
 sf::Vector2i ApplicationLayer::GetMousePos(sf::RenderWindow& window)
 {
 	return sf::Mouse::getPosition(window);
+}
+
+void ApplicationLayer::DrawObstaclesByMouseInput(bool movingStartNode, bool movingEndNode)
+{
+	auto& app = Application::Get();
+	auto& window = app.GetWindow();
+
+	int x = (int)(GetMousePos(window).x - 10) / Map::NodeCellSize;
+	int y = (int)(GetMousePos(window).y - 10) / Map::NodeCellSize;
+
+	bool startNodeBounds = (x == startNode.m_PosX && y == startNode.m_PosY);
+	bool endNodeBounds = (x == endNode.m_PosX && y == endNode.m_PosY);
+
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !movingEndNode && !movingStartNode)
+	{
+		int x = (GetMousePos(window).x - 10) / Map::NodeCellSize;
+		int y = (GetMousePos(window).y - 10) / Map::NodeCellSize; 
+
+		if (!startNodeBounds && !endNodeBounds)
+		{
+			Node obstacle(x, y, true, false);
+			obstacle.m_Mark = 'X';
+			map.Add(obstacle);
+			DrawNode(window, obstacle, sf::Color(128, 128, 128));
+		}
+	}
 }
 
 void ApplicationLayer::DrawGrid(sf::RenderWindow& window)
@@ -340,6 +407,23 @@ void ApplicationLayer::DrawNode(sf::RenderWindow& window, Node node, sf::Color c
 	cell.setPosition(sf::Vector2f(cx, cy));
 
 	window.draw(cell);
+}
+
+void ApplicationLayer::DrawNodeMarker(sf::RenderWindow& window, int x, int y, bool marking)
+{
+	if (marking)
+	{
+		sf::RectangleShape cell(sf::Vector2f(Map::NodeCellSize, Map::NodeCellSize));
+		cell.setOutlineColor(sf::Color::Red);
+		cell.setOutlineThickness(3);
+
+		float cx = (x * Map::NodeCellSize) + 10.f;
+		float cy = (y * Map::NodeCellSize) + 10.f;
+
+		cell.setPosition(sf::Vector2f(cx, cy));
+		std::cout << "Drawing node marker\n";
+		window.draw(cell);
+	}
 }
 
 
@@ -389,18 +473,6 @@ void ApplicationLayer::CarvePath(sf::RenderWindow& window, Node node)
 	
 }
 
-void ApplicationLayer::DrawWalls(sf::RenderWindow& window)
-{
-	std::vector<Node> walls = map.GetWalls();
-
-	for (const Node& wall : walls)
-	{
-		DrawNode(window, wall, sf::Color::Black);
-
-		float cx = (wall.m_PosX * Map::NodeCellSize) + 10.f;
-		float cy = (wall.m_PosY * Map::NodeCellSize) + 10.f;
-	}
-}
 
 void ApplicationLayer::DrawObstacles(sf::RenderWindow& window)
 {

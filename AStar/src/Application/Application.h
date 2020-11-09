@@ -22,12 +22,9 @@ private:
 	float m_LastFrameTime = 0.0f;
 	bool m_Running = false;
 
-	sf::Color bgColor;
-	float color[3] = { 0.f, 0.f, 0.f };
-	char windowTitle[255] = "ImGui + SFML = <3";
 
 public:
-	inline static constexpr uint32_t Width = 1500;
+	inline static constexpr uint32_t Width = 2000;
 	inline static constexpr uint32_t Height = 1500;
 
 	Application();
@@ -40,6 +37,9 @@ public:
 
 	static Application& Get();
 	sf::RenderWindow& GetWindow();
+
+	ImGuiLayer& GetImGuiWindow() { return *s_ImGuiWindow; }
+
 
 	void SetLayer(Layer* layer);
 	void Init();

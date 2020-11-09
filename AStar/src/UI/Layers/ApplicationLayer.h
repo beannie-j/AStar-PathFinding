@@ -18,6 +18,9 @@ public:
 	virtual void OnUpdate(Timestep ts) override;
 	virtual void OnEvent(sf::Event& event) override;
 
+	virtual void OnButtonPressedEvent(Timestep ts) override;
+	virtual void OnKeyPressedEvent(Timestep ts) override;
+
 private:
 	static bool running;
 
@@ -55,15 +58,14 @@ private:
 	void Update(Timestep ts);
 
 	sf::Vector2i GetMousePos(sf::RenderWindow& window);
+	void DrawObstaclesByMouseInput(bool movingStartNode, bool movingEndNode);
 	void DrawGrid(sf::RenderWindow& window);
 	void DrawNode(sf::RenderWindow& window, Node node, sf::Color color);
+	void DrawNodeMarker(sf::RenderWindow& window, int x, int y, bool marking);
 	void CarvePath(sf::RenderWindow& window, Node node);
 	void DrawObstacles(sf::RenderWindow& window);
 	void DrawPathNodes(sf::RenderWindow& window);
 	void DrawVisitedNodes(sf::RenderWindow& window);
-	void DrawWalls(sf::RenderWindow& window);
-
-
 	void DrawPath(sf::RenderWindow& window);
 
 };

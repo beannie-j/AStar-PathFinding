@@ -15,4 +15,7 @@ public:
 	virtual void OnUpdate(Timestep ts) {};
 	virtual void OnEvent(sf::Event& event) {};
 
+	virtual void OnButtonPressedEvent(Timestep ts) {};
+	virtual void OnKeyPressedEvent(Timestep ts) {};
+
 };

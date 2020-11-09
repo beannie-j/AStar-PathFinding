@@ -97,6 +97,13 @@ void Path::EndPathFinding()
 {
 }
 
+void Path::ClearAllSet()
+{
+	m_OpenSet.clear();
+	m_ClosedSet.clear();
+	m_PathSet.clear();
+}
+
 int Path::CalculateGCost(Node& node, const Node& startNode)
 {
 	node.m_GCost = GetDistance(node, startNode);
