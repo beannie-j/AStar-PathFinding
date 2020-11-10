@@ -181,6 +181,8 @@ void ApplicationLayer::OnEvent(sf::Event& event)
 
 	bool startNodeBounds = (mousePosX == startNode.m_PosX && mousePosY == startNode.m_PosY);
 	bool endNodeBounds = (mousePosX == endNode.m_PosX && mousePosY == endNode.m_PosY);
+	
+	static std::vector<std::pair<int, int>> s_PathCoords;
 
 	if (event.mouseButton.button == sf::Mouse::Left && event.type == sf::Event::MouseButtonPressed && startNodeBounds)
 	{
@@ -194,38 +196,59 @@ void ApplicationLayer::OnEvent(sf::Event& event)
 		movingEndNode = true;
 	}
 
+	if (dragging)
+	{
+		s_PathCoords.push_back(std::make_pair(mousePosX, mousePosY));
+		std::cout << "adding\n";
+	}
+
 	if (event.mouseButton.button == sf::Mouse::Left && event.type == sf::Event::MouseButtonReleased && dragging)
 	{
 		if (movingStartNode)
 		{
-			startNode.m_PosX = mousePosX;
-			startNode.m_PosY = mousePosY;
-
+			if (!map.GetNode(mousePosX, mousePosY).m_IsObstacle)
+			{
+				startNode.m_PosX = mousePosX;
+				startNode.m_PosY = mousePosY;
+			}
+			else
+			{
+				std::cout << "you are trying to place to obstacle node\n";
+				startNode.m_PosX = s_PathCoords.back().first;
+				startNode.m_PosY = s_PathCoords.back().second;
+				std::cout << startNode.m_PosX << ", " << startNode.m_PosY << std::endl;
+			}
 			map.ResetPath();
 			startNode.m_Mark = 'S';
 			map.Add(startNode);
-
-			map.Draw();
-
-			m_Path.BeginPathFinding(startNode, endNode);
-
+			s_PathCoords.clear();
 			movingStartNode = false;
 		}
 
 		if (movingEndNode)
 		{
-			endNode.m_PosX = mousePosX;
-			endNode.m_PosY = mousePosY;
+			if (!map.GetNode(mousePosX, mousePosY).m_IsObstacle)
+			{
+				endNode.m_PosX = mousePosX;
+				endNode.m_PosY = mousePosY;
+			}
+			else
+			{
+				std::cout << "you are trying to place to obstacle node\n";
+				endNode.m_PosX = s_PathCoords.back().first;
+				endNode.m_PosY = s_PathCoords.back().second;
 
+				std::cout << endNode.m_PosX << ", " << endNode.m_PosY << std::endl;
+			}
+			
 			map.ResetPath();
 			endNode.m_Mark = 'E';
 			map.Add(endNode);
 
-			map.Draw();
-
-			m_Path.BeginPathFinding(startNode, endNode);
 			movingEndNode = false;
 		}
+
+		m_Path.BeginPathFinding(startNode, endNode);
 		dragging = false;
 	}
 
@@ -349,6 +372,11 @@ void ApplicationLayer::Render(Timestep ts)
 
 	if (movingStartNode)
 	{
+		if (map.GetNode(x, y).m_IsObstacle)
+		{
+			DrawNodeMarker(window, x, y, sf::Color::Black);
+			return;
+		}
 		DrawNodeMarker(window, x, y, sf::Color::Red);
 	}
 
