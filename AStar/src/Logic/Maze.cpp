@@ -32,20 +32,14 @@ bool Maze::NextStep()
 	// check for possible neighbours it can visit to and picks next node to go to.
 	if (!neighbours.empty())
 	{
-		std::cout << "Proceeding to random nodes\n";
 		int randIdx = rand() % neighbours.size();
 		Node nextNode = neighbours[randIdx];
 		m_NumVisitedCells += 1;
 		pathStack.push(node);
 		visited.push_back(nextNode);
-		//std::cout << "Moving to : "; 
-		//nextNode.Print();
 	}
 	else // neighbour stack is empty, no where to go to, start backtracking.
 	{
-		std::cout << "[backtracking]: ";
-		std::cout << "m_NumVisitedCells : " << m_NumVisitedCells << " map size :" << map.Size() << std::endl;
-		std::cout << "size : "  << pathStack.size() << std::endl;
 		if (pathStack.size() <= 0) return true;
 		node = pathStack.top();
 		visited.push_back(node);

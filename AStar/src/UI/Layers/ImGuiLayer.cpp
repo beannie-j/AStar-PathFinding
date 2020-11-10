@@ -41,30 +41,27 @@ void ImGuiLayer::OnUpdate(sf::Clock clock)
 
 	ImGuiComboFlags flags = ImGuiComboFlags_NoArrowButton;
 
-	const char* items[] = { "A Star", "Algorithm 1", "Algorithm 2", "Algorithm 3" };
-	static const char* current_item = "Select algorithm";
+	const char* items[] = { "A Star", "Dijkstra", "Greedy Best-first", "Breadth-first", "Depth-first" };
+	static const char* currentItem = "Select algorithm";
 
-	if (ImGui::BeginCombo("##custom combo", current_item, ImGuiComboFlags_NoArrowButton))
+	if (ImGui::BeginCombo("##custom combo", currentItem, ImGuiComboFlags_NoArrowButton))
 	{
 		for (int n = 0; n < IM_ARRAYSIZE(items); n++)
 		{
-			bool is_selected = (current_item == items[n]);
+			bool is_selected = (currentItem == items[n]);
 			if (ImGui::Selectable(items[n], is_selected))
-				current_item = items[n];
+			{
+				currentItem = items[n];
+				m_SelectedIndex = n;
+				std::cout << "[Selected] : " << n << " : "<< currentItem << std::endl;
+			}
+	
 			if (is_selected)
 			{
 				ImGui::SetItemDefaultFocus();
-				std::cout << items[n] << std::endl;
 			}
 		}
 		ImGui::EndCombo();
-	}
-
-	ImGui::Dummy(ImVec2(0.0f, 20.0f));
-
-	if (ImGui::Button("Clear Map"))
-	{
-		m_ClearMapBtnPressed = !m_ClearMapBtnPressed;
 	}
 
 	ImGui::Dummy(ImVec2(0.0f, 20.0f));
@@ -76,12 +73,18 @@ void ImGuiLayer::OnUpdate(sf::Clock clock)
 
 	ImGui::Dummy(ImVec2(0.0f, 20.0f));
 
+	if (ImGui::Button("Clear Map"))
+	{
+		m_ClearMapBtnPressed = !m_ClearMapBtnPressed;
+	}
+
+	ImGui::Dummy(ImVec2(0.0f, 20.0f));
+
 	if (ImGui::Button("Draw Maze"))
 	{
 		m_DrawMazeBtnPressed = !m_DrawMazeBtnPressed;
 	}
 
-	ImGui::Dummy(ImVec2(0.0f, 20.0f));
 
 	ImGui::End();
 }

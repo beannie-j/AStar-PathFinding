@@ -43,7 +43,6 @@ void ApplicationLayer::OnShutDown()
 static float s_PathTime = 0.01f; 
 static float s_PathTimer = s_PathTime;
 
-
 struct PathData
 {
 	int NodeX = 0, NodeY = 0;
@@ -195,19 +194,6 @@ void ApplicationLayer::OnEvent(sf::Event& event)
 		movingEndNode = true;
 	}
 
-	if (movingStartNode)
-	{
-		std::cout << "dragging start node\n";
-		std::cout << mousePosX << " , " << mousePosY << std::endl;
-		DrawNodeMarker(window, mousePosX, mousePosY, true);
-	}
-
-	if (movingEndNode)
-	{
-		std::cout << "dragging End node\n";
-		std::cout << mousePosX << " , " << mousePosY << std::endl;
-	}
-
 	if (event.mouseButton.button == sf::Mouse::Left && event.type == sf::Event::MouseButtonReleased && dragging)
 	{
 		if (movingStartNode)
@@ -252,7 +238,7 @@ void ApplicationLayer::OnButtonPressedEvent(Timestep ts)
 	auto& window = app.GetWindow();
 	auto& imGuiWindow = app.GetImGuiWindow();
 
-	if (imGuiWindow.isDrawMazeButtonPressed())
+	if (imGuiWindow.IsDrawMazeButtonPressed())
 	{
 		map.ResetPath();
 		map.ResetObstacles();
@@ -261,16 +247,41 @@ void ApplicationLayer::OnButtonPressedEvent(Timestep ts)
 		m_BeginDrawMaze = true;
 	}
 
-	if (imGuiWindow.isFindPathButtonPressed())
+	if (imGuiWindow.IsFindPathButtonPressed())
 	{
-		m_Path.BeginPathFinding(startNode, endNode);
-		m_BeginPathFinding = true;
+		int8_t selectedIndex = imGuiWindow.GetSelectedItemFromDropDown();
+
+		switch (selectedIndex)
+		{
+		case -1:
+			std::cout << "No algorithm selected\n";
+			break;
+		case 0:
+			std::cout << "A Star\n";
+			m_Path.BeginPathFinding(startNode, endNode);
+			m_BeginPathFinding = true;
+			break;
+		case 1:
+			std::cout << "Dijkstra selected\n";
+			break;
+		case 2:
+			std::cout << "Greedy Best-first\n";
+			break;
+		case 3:
+			std::cout << "Breadth-first\n";
+			break;
+		case 4:
+			std::cout << "Depth-first\n";
+			break;
+		}
 	}
 
-	if (imGuiWindow.isClearMapButtonPressed())
+	if (imGuiWindow.IsClearMapButtonPressed())
 	{
+		std::cout << "Clear map\n";
 		map.ResetPath();
 		map.ResetObstacles();
+		m_Path.ClearAllSet();
 		startNode.m_Mark = 'S';
 		map.Add(startNode);
 		endNode.m_Mark = 'E';
@@ -332,6 +343,19 @@ void ApplicationLayer::Render(Timestep ts)
 	window.draw(Sprite_LocationPin);
 
 	DrawObstacles(window);
+
+	int x = (int)(GetMousePos(window).x - 10) / Map::NodeCellSize;
+	int y = (int)(GetMousePos(window).y - 10) / Map::NodeCellSize;
+
+	if (movingStartNode)
+	{
+		DrawNodeMarker(window, x, y, sf::Color::Red);
+	}
+
+	if (movingEndNode)
+	{
+		DrawNodeMarker(window, x, y, sf::Color::Green);
+	}
 }
 
 void ApplicationLayer::Update(Timestep ts)
@@ -339,7 +363,6 @@ void ApplicationLayer::Update(Timestep ts)
 	auto& app = Application::Get();
 	auto& window = app.GetWindow();
 	auto& imGuiWindow = app.GetImGuiWindow();
-
 }
 
 sf::Vector2i ApplicationLayer::GetMousePos(sf::RenderWindow& window)
@@ -409,21 +432,17 @@ void ApplicationLayer::DrawNode(sf::RenderWindow& window, Node node, sf::Color c
 	window.draw(cell);
 }
 
-void ApplicationLayer::DrawNodeMarker(sf::RenderWindow& window, int x, int y, bool marking)
+void ApplicationLayer::DrawNodeMarker(sf::RenderWindow& window, int x, int y, sf::Color color)
 {
-	if (marking)
-	{
-		sf::RectangleShape cell(sf::Vector2f(Map::NodeCellSize, Map::NodeCellSize));
-		cell.setOutlineColor(sf::Color::Red);
-		cell.setOutlineThickness(3);
+	sf::RectangleShape cell(sf::Vector2f(Map::NodeCellSize, Map::NodeCellSize));
+	cell.setOutlineColor(color);
+	cell.setOutlineThickness(5);
 
-		float cx = (x * Map::NodeCellSize) + 10.f;
-		float cy = (y * Map::NodeCellSize) + 10.f;
+	float cx = (x * Map::NodeCellSize) + 10.f;
+	float cy = (y * Map::NodeCellSize) + 10.f;
 
-		cell.setPosition(sf::Vector2f(cx, cy));
-		std::cout << "Drawing node marker\n";
-		window.draw(cell);
-	}
+	cell.setPosition(sf::Vector2f(cx, cy));
+	window.draw(cell);
 }
 
 

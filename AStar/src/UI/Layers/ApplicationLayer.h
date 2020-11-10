@@ -61,7 +61,7 @@ private:
 	void DrawObstaclesByMouseInput(bool movingStartNode, bool movingEndNode);
 	void DrawGrid(sf::RenderWindow& window);
 	void DrawNode(sf::RenderWindow& window, Node node, sf::Color color);
-	void DrawNodeMarker(sf::RenderWindow& window, int x, int y, bool marking);
+	void DrawNodeMarker(sf::RenderWindow& window, int x, int y, sf::Color color);
 	void CarvePath(sf::RenderWindow& window, Node node);
 	void DrawObstacles(sf::RenderWindow& window);
 	void DrawPathNodes(sf::RenderWindow& window);

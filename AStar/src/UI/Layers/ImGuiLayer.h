@@ -19,9 +19,11 @@ public:
 	void OnUpdate(sf::Clock clock);
 	void Render();
 
-	bool isFindPathButtonPressed() { return m_FindPathBtnPressed; }
-	bool isDrawMazeButtonPressed() { return m_DrawMazeBtnPressed; }
-	bool isClearMapButtonPressed() { return m_ClearMapBtnPressed; }
+	bool IsFindPathButtonPressed() { return m_FindPathBtnPressed; }
+	bool IsDrawMazeButtonPressed() { return m_DrawMazeBtnPressed; }
+	bool IsClearMapButtonPressed() { return m_ClearMapBtnPressed; }
+
+	int8_t GetSelectedItemFromDropDown() { return m_SelectedIndex; }
 
 
 private:
@@ -29,4 +31,5 @@ private:
 		m_DrawMazeBtnPressed = false,
 		m_ClearMapBtnPressed = false;
 
+	int8_t m_SelectedIndex = -1;
 };
