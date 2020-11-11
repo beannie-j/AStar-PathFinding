@@ -63,7 +63,6 @@ static void TryPlaceWall(Map& map, int x, int y)
 		node.m_Mark = 'W';
 		map.Add(node);
 	}
-		
 }
 
 void ApplicationLayer::OnUpdate(Timestep ts)
@@ -145,7 +144,6 @@ void ApplicationLayer::OnUpdate(Timestep ts)
 				s_LastPathNode.NodeX = node.m_PosX;
 				s_LastPathNode.NodeY = node.m_PosY;
 				s_LastPathNode.Dir = node.GetDir();
-
 			}
 			s_PathTimer = s_PathTime;
 		}
@@ -171,6 +169,42 @@ static bool dragging = false;
 static bool movingStartNode = false;
 static bool movingEndNode = false;
 
+struct DragData
+{
+	Node* DragNode = nullptr;
+	std::pair<int, int> OriginCoords;
+
+	operator bool() { return DragNode; }
+};
+
+DragData s_DragData;
+
+static void BeginDrag(Node* node)
+{
+	if (s_DragData)
+	{
+		//assert
+	}
+	s_DragData = { node, { node->m_PosX, node->m_PosY } };
+}
+
+static void UpdateDrag(/*MousePosition*/)
+{
+	if (!s_DragData)
+		return;
+
+	//HZ_ASSERT(s_DragData, "Drag data must be true!");
+
+	// process dragging
+}
+
+static void EndDrag()
+{
+	// read from drag data
+
+	s_DragData.DragNode = nullptr;
+}
+
 void ApplicationLayer::OnEvent(sf::Event& event)
 {
 	auto& app = Application::Get();
@@ -179,21 +213,27 @@ void ApplicationLayer::OnEvent(sf::Event& event)
 	int mousePosX = (int)(GetMousePos(window).x - 10) / Map::NodeCellSize;
 	int mousePosY = (int)(GetMousePos(window).y - 10) / Map::NodeCellSize;
 
-	bool startNodeBounds = (mousePosX == startNode.m_PosX && mousePosY == startNode.m_PosY);
-	bool endNodeBounds = (mousePosX == endNode.m_PosX && mousePosY == endNode.m_PosY);
-	
 	static std::vector<std::pair<int, int>> s_PathCoords;
-
-	if (event.mouseButton.button == sf::Mouse::Left && event.type == sf::Event::MouseButtonPressed && startNodeBounds)
+	
+	if (s_DragData)
 	{
-		dragging = true;
-		movingStartNode = true;
+		//s_DragData.DragNode->m_Pos
 	}
 
-	if (event.mouseButton.button == sf::Mouse::Left && event.type == sf::Event::MouseButtonPressed && endNodeBounds)
+	if (event.mouseButton.button == sf::Mouse::Left && event.type == sf::Event::MouseButtonPressed)
 	{
 		dragging = true;
-		movingEndNode = true;
+
+		bool startNodeBounds = (mousePosX == startNode.m_PosX && mousePosY == startNode.m_PosY);
+		movingStartNode = startNodeBounds;
+
+		if (movingStartNode)
+		{
+			BeginDrag(&startNode);
+		}
+
+		bool endNodeBounds = (mousePosX == endNode.m_PosX && mousePosY == endNode.m_PosY);
+		movingEndNode = endNodeBounds;
 	}
 
 	if (dragging)
@@ -214,9 +254,9 @@ void ApplicationLayer::OnEvent(sf::Event& event)
 			else
 			{
 				std::cout << "you are trying to place to obstacle node\n";
+				std::cout << s_PathCoords.back().first << " , " << s_PathCoords.back().second;
 				startNode.m_PosX = s_PathCoords.back().first;
 				startNode.m_PosY = s_PathCoords.back().second;
-				std::cout << startNode.m_PosX << ", " << startNode.m_PosY << std::endl;
 			}
 			map.ResetPath();
 			startNode.m_Mark = 'S';
@@ -237,8 +277,6 @@ void ApplicationLayer::OnEvent(sf::Event& event)
 				std::cout << "you are trying to place to obstacle node\n";
 				endNode.m_PosX = s_PathCoords.back().first;
 				endNode.m_PosY = s_PathCoords.back().second;
-
-				std::cout << endNode.m_PosX << ", " << endNode.m_PosY << std::endl;
 			}
 			
 			map.ResetPath();
@@ -251,7 +289,6 @@ void ApplicationLayer::OnEvent(sf::Event& event)
 		m_Path.BeginPathFinding(startNode, endNode);
 		dragging = false;
 	}
-
 	DrawObstaclesByMouseInput(movingStartNode, movingEndNode);
 }
 
@@ -402,6 +439,8 @@ void ApplicationLayer::DrawObstaclesByMouseInput(bool movingStartNode, bool movi
 {
 	auto& app = Application::Get();
 	auto& window = app.GetWindow();
+
+	printf("Mouse: %d, %d\n", GetMousePos(window).x, GetMousePos(window).y);
 
 	int x = (int)(GetMousePos(window).x - 10) / Map::NodeCellSize;
 	int y = (int)(GetMousePos(window).y - 10) / Map::NodeCellSize;

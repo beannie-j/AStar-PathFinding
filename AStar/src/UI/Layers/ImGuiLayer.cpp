@@ -70,22 +70,18 @@ void ImGuiLayer::OnUpdate(sf::Clock clock)
 	{
 		m_FindPathBtnPressed = !m_FindPathBtnPressed;
 	}
-
 	ImGui::Dummy(ImVec2(0.0f, 20.0f));
 
 	if (ImGui::Button("Clear Map"))
 	{
 		m_ClearMapBtnPressed = !m_ClearMapBtnPressed;
 	}
-
 	ImGui::Dummy(ImVec2(0.0f, 20.0f));
 
 	if (ImGui::Button("Draw Maze"))
 	{
 		m_DrawMazeBtnPressed = !m_DrawMazeBtnPressed;
 	}
-
-
 	ImGui::End();
 }
 
