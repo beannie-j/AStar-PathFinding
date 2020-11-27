@@ -17,17 +17,15 @@
 This is a visualiser that implements the A* Path Finding algorithm. Let's find the shortest path to get somewhere!
 
 
-
-![](https://i.gyazo.com/ef6e5ed429343cf3999e1669322c61c5.gif)
-
 Maze generation
 ![](Assets/generate_maze.gif)
+
+Find path in a maze
+![](Assets/find_in_maze.gif)
 
 Find path
 ![](Assets/find_path.gif)
 
-Find path in a maze
-![](Assets/find_in_maze.gif)
 
 ### Built With
 
