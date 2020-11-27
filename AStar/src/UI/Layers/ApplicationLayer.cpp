@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <set>
 
 void ApplicationLayer::OnInit()
 {
@@ -169,6 +170,11 @@ static bool dragging = false;
 static bool movingStartNode = false;
 static bool movingEndNode = false;
 
+sf::Vector2i ApplicationLayer::GetMousePos(sf::RenderWindow& window)
+{
+	return sf::Mouse::getPosition(window);
+}
+
 struct DragData
 {
 	Node* DragNode = nullptr;
@@ -186,21 +192,34 @@ static void BeginDrag(Node* node)
 		//assert
 	}
 	s_DragData = { node, { node->m_PosX, node->m_PosY } };
+
 }
 
-static void UpdateDrag(/*MousePosition*/)
+static void UpdateDrag(sf::RenderWindow& window)
 {
 	if (!s_DragData)
 		return;
 
 	//HZ_ASSERT(s_DragData, "Drag data must be true!");
+	/*
+	int mousePosX = sf::Mouse::getPosition(window).x;
+	int mousePosY = sf::Mouse::getPosition(window).y;
 
-	// process dragging
+	int screenPosX = (int)(mousePosX - 10) / Map::NodeCellSize;
+	int screenPosY = (int)(mousePosY - 10) / Map::NodeCellSize;
+
+	s_DragData.DragNode->m_PosX = screenPosX;
+	s_DragData.DragNode->m_PosY = screenPosY;
+
+	*/
+
 }
 
 static void EndDrag()
 {
 	// read from drag data
+
+
 
 	s_DragData.DragNode = nullptr;
 }
@@ -213,33 +232,41 @@ void ApplicationLayer::OnEvent(sf::Event& event)
 	int mousePosX = (int)(GetMousePos(window).x - 10) / Map::NodeCellSize;
 	int mousePosY = (int)(GetMousePos(window).y - 10) / Map::NodeCellSize;
 
-	static std::vector<std::pair<int, int>> s_PathCoords;
+	static std::set<std::pair<int, int>> s_PathCoords;
 	
 	if (s_DragData)
 	{
-		//s_DragData.DragNode->m_Pos
+		UpdateDrag(window);
 	}
 
 	if (event.mouseButton.button == sf::Mouse::Left && event.type == sf::Event::MouseButtonPressed)
 	{
-		dragging = true;
-
 		bool startNodeBounds = (mousePosX == startNode.m_PosX && mousePosY == startNode.m_PosY);
 		movingStartNode = startNodeBounds;
 
 		if (movingStartNode)
 		{
+			dragging = true;
 			BeginDrag(&startNode);
 		}
 
 		bool endNodeBounds = (mousePosX == endNode.m_PosX && mousePosY == endNode.m_PosY);
 		movingEndNode = endNodeBounds;
+
+		if (movingEndNode)
+		{
+			dragging = true;
+			BeginDrag(&endNode);
+		}
 	}
 
 	if (dragging)
 	{
-		s_PathCoords.push_back(std::make_pair(mousePosX, mousePosY));
-		std::cout << "adding\n";
+		s_PathCoords.insert(std::make_pair(mousePosX, mousePosY));	
+		//std::cout << "*******adding  " << mousePosX << " , " << mousePosY << std::endl;
+		auto last = *s_PathCoords.rbegin();
+		//std::cout << last.first << " , " << last.second << std::endl;
+
 	}
 
 	if (event.mouseButton.button == sf::Mouse::Left && event.type == sf::Event::MouseButtonReleased && dragging)
@@ -253,16 +280,20 @@ void ApplicationLayer::OnEvent(sf::Event& event)
 			}
 			else
 			{
-				std::cout << "you are trying to place to obstacle node\n";
-				std::cout << s_PathCoords.back().first << " , " << s_PathCoords.back().second;
-				startNode.m_PosX = s_PathCoords.back().first;
-				startNode.m_PosY = s_PathCoords.back().second;
+				//std::cout << s_PathCoords.rbegin()[2].first << " , " << s_PathCoords.rbegin()[2].second;
+				auto it = std::prev(s_PathCoords.end(), 2);
+				startNode.m_PosX = it->first;
+				startNode.m_PosY = it->second;
+				std::cout << "***************you are trying to place to obstacle node\n";
+
 			}
 			map.ResetPath();
 			startNode.m_Mark = 'S';
 			map.Add(startNode);
-			s_PathCoords.clear();
 			movingStartNode = false;
+			std::cout << "clearing s_pathcoords \n";
+			s_PathCoords.clear();
+
 		}
 
 		if (movingEndNode)
@@ -274,15 +305,18 @@ void ApplicationLayer::OnEvent(sf::Event& event)
 			}
 			else
 			{
-				std::cout << "you are trying to place to obstacle node\n";
-				endNode.m_PosX = s_PathCoords.back().first;
-				endNode.m_PosY = s_PathCoords.back().second;
+				std::cout << "***************you are trying to place to obstacle node\n";
+				//std::cout << s_PathCoords.rbegin()[2].first << " , " << s_PathCoords.rbegin()[2].second;
+				auto it = std::prev(s_PathCoords.end(), 2);
+
+				endNode.m_PosX = it->first;
+				endNode.m_PosY = it->second;
 			}
 			
 			map.ResetPath();
 			endNode.m_Mark = 'E';
 			map.Add(endNode);
-
+			s_PathCoords.clear();
 			movingEndNode = false;
 		}
 
@@ -406,7 +440,6 @@ void ApplicationLayer::Render(Timestep ts)
 
 	int x = (int)(GetMousePos(window).x - 10) / Map::NodeCellSize;
 	int y = (int)(GetMousePos(window).y - 10) / Map::NodeCellSize;
-
 	if (movingStartNode)
 	{
 		if (map.GetNode(x, y).m_IsObstacle)
@@ -430,17 +463,12 @@ void ApplicationLayer::Update(Timestep ts)
 	auto& imGuiWindow = app.GetImGuiWindow();
 }
 
-sf::Vector2i ApplicationLayer::GetMousePos(sf::RenderWindow& window)
-{
-	return sf::Mouse::getPosition(window);
-}
-
 void ApplicationLayer::DrawObstaclesByMouseInput(bool movingStartNode, bool movingEndNode)
 {
 	auto& app = Application::Get();
 	auto& window = app.GetWindow();
 
-	printf("Mouse: %d, %d\n", GetMousePos(window).x, GetMousePos(window).y);
+	//printf("Mouse: %d, %d\n", GetMousePos(window).x, GetMousePos(window).y);
 
 	int x = (int)(GetMousePos(window).x - 10) / Map::NodeCellSize;
 	int y = (int)(GetMousePos(window).y - 10) / Map::NodeCellSize;

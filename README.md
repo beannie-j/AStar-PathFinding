@@ -1,36 +1,3 @@
-<!--
-*** Thanks for checking out this README Template. If you have a suggestion that would
-*** make this better, please fork the repo and create a pull request or simply open
-*** an issue with the tag "enhancement".
-*** Thanks again! Now go create something AMAZING! :D
-***
-***
-***
-*** To avoid retyping too much info. Do a search and replace for the following:
-*** github_username, repo_name, twitter_handle, email
--->
-
-
-
-
-
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
-
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][https://img.shields.io/github/issues/IgorAntun/node-chat.svg]][https://github.com/beannie-j/AStar-PathFinding/issues]
-[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
--->
-
-
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
@@ -44,22 +11,6 @@
   </p>
 </p>
 
-
-
-<!-- TABLE OF CONTENTS 
-## Table of Contents
-
-* [About the Project](#about-the-project)
-  * [Built With](#built-with)
-* [Getting Started](#getting-started)
-  * [Prerequisites](#prerequisites)
-  * [Installation](#installation)
-* [Usage](#usage)
-* [License](#license)
-* [Contact](#contact)
-
--->
-
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
@@ -69,25 +20,21 @@ This is a visualiser that implements the A* Path Finding algorithm. Let's find t
 
 ![](https://i.gyazo.com/ef6e5ed429343cf3999e1669322c61c5.gif)
 
+Maze generation
+![](Assets/generate_maze.gif)
 
-Maze Generation
-![](https://gyazo.com/78d91696b1c261d79211b29f83b61fdf.gif)
+Find path
+![](Assets/find_path.gif)
 
-<!-- 
-<a href="https://gyazo.com/ef6e5ed429343cf3999e1669322c61c5"><img src="https://i.gyazo.com/ef6e5ed429343cf3999e1669322c61c5.gif" alt="Image from Gyazo" width="1800"/></a>
-
-GETTING STARTED 
-Here's a blank template to get started:
-**To avoid retyping too much info. Do a search and replace with your text editor for the following:**
-`github_username`, `repo_name`, `twitter_handle`, `email`
--->
+Find path in a maze
+![](Assets/find_in_maze.gif)
 
 ### Built With
 
 * [SFML library](https://www.sfml-dev.org/)
 
 
-<!-- GETTING STARTED -->
+
 ## Getting Started
 
 To get a local copy up and running follow these simple steps.
