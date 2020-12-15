@@ -219,8 +219,6 @@ static void EndDrag()
 {
 	// read from drag data
 
-
-
 	s_DragData.DragNode = nullptr;
 }
 
@@ -366,6 +364,9 @@ void ApplicationLayer::OnButtonPressedEvent(Timestep ts)
 			break;
 		case 4:
 			std::cout << "Depth-first\n";
+			break;
+		case 5:
+			std::cout << "Swarm\n";
 			break;
 		}
 	}

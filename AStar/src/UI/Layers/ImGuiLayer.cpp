@@ -41,7 +41,7 @@ void ImGuiLayer::OnUpdate(sf::Clock clock)
 
 	ImGuiComboFlags flags = ImGuiComboFlags_NoArrowButton;
 
-	const char* items[] = { "A Star", "Dijkstra", "Greedy Best-first", "Breadth-first", "Depth-first" };
+	const char* items[] = { "A Star", "Dijkstra", "Greedy Best-first", "Breadth-first", "Depth-first", "Swarm"};
 	static const char* currentItem = "Select algorithm";
 
 	if (ImGui::BeginCombo("##custom combo", currentItem, ImGuiComboFlags_NoArrowButton))

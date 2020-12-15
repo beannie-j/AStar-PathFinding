@@ -3,6 +3,7 @@
 bin-int/
 !vendor/bin
 !Dependencies/bin
+!vendor/SFML/bin/
 
 
 # Visual Studio files and folder
